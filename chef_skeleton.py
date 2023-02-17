@@ -8,7 +8,6 @@
 	# recipe preparation mechanics (time, queue, booster items affect time)
 	# create a list of recipe names, unlockable by quality (upgradeable with items) also how much time they take *
 	# late game booster items (hats, clothes and whatever)
-	# queue for cooking recipes
 	# tutorial
 	# saving and loading game mechanics
 
