@@ -11,10 +11,10 @@ import time
 from chef_skeleton import *
 import random
 
-def timer(duration, recipe_list):
-	print(recipe_list[0].name, "Has started cooking:", duration)
-	time.sleep(duration) # might need to run this in while loop??
-	print(recipe_list[0].name, "Has finished cooking, you have gained:", recipe_list[0].exp_value, "XP!")
+def timer(recipe_list, recipe):
+	print(recipe.name, "Has started cooking:", recipe.timer)
+	time.sleep(recipe.timer)
+	print(recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
 
 def level_up_1(player):
 	if player.level == 0:
@@ -62,8 +62,6 @@ def main():
 		recipe1 = Recipe("1. \033[32mRoasted Potatoes\033[0m", 30, 0, 5)
 		recipe2 = Recipe("2. \033[32mChicken with Roasted Potatoes\033[0m", 45, 0, 150)
 		recipe3 = Recipe("3. \033[32mMashed Potatoes\033[0m", 20, 0, 100)
-		recipe_list = (recipe1, recipe2, recipe3)
-		# duration = recipe_list[0].timer # need to make duration take data from a tuple
 
 		print("Hello young chef, welcome to the kitchen!")
 		time.sleep(1)
@@ -86,32 +84,28 @@ def main():
 		time.sleep(1)
 		Recipe.check_recipe_inv()
 
-		def recipe_selection(recipe_list):
-			if len(Recipe.recipe_inv) <= 1: # player selects recipe
-				try:
-					recipe_value = int(input("Enter the recipe number you want to cook: "))
-					if recipe_value < 1 or recipe_value > len(Recipe.recipe_inv):
-						print("Invalid number, please enter a number between 1 and ", len(Recipe.recipe_inv))
-						recipe_selection(recipe_list)
-					else:
-						return recipe_list[recipe_value - 1]
-				except ValueError:
-					print("Invalid number, please try again!")
+		def tutorial_cooking_input():
+			recipe_list = Recipe.recipe_inv
 
+			print("Select the recipe you want to cook")
 
-		def tutorial_cooking_input(recipe_list):
-			# will fix later
-				timer(duration, recipe_list)
+			for recipe in recipe_list:
+				print(recipe.name)
+
+			recipe_index = int(input("Select the desired recipe: ")) - 1
+
+			if recipe_index >= 0:
+				recipe = recipe_list[recipe_index]
+				timer(recipe_list, recipe)
 				player.experience += recipe.exp_value
 				level_up_1(player)
 			else:
-				print("You do not have any recipes to cook!")
+				print("Invalid entry, please enter a number starting from 0")	
 
 		print("Let's start off by practicing your cooking skills")
 		time.sleep(1)
 		print("So first you will want to select the option to cook, which I will give you now")
-		recipe_selection(recipe_list)
-		tutorial_cooking_input(recipe_list)
+		tutorial_cooking_input()
 
 		break
 main()
