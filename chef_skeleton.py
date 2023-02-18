@@ -1,18 +1,3 @@
-# chef simulator
-	# add player (chef) class *
-	# add stats (1 - 5 stars) *
-	# develop stats by cooking and other stuff (gain xp from recipes) / timer ending gives xp to player *
-		# will need a lot of if statements, optimisation problems inc.
-		# also need to fix timer to recognise multiple recipes without manual input
-	# equipment and equipment upgrading (equipment parts to upgrade equipment or forge a new one)
-	# recipe preparation mechanics (time, queue, booster items affect time)
-	# create a list of recipe names, unlockable by quality (upgradeable with items) also how much time they take *
-	# late game booster items (hats, clothes and whatever)
-	# tutorial
-	# saving and loading game mechanics
-
-# cd desktop/'gert work'/'gert coding'/'chef game'
-
 class Player:
 	player_inventory = []
 
@@ -97,10 +82,6 @@ class Recipe:
 		self.quality = quality
 		self.timer = timer # in seconds
 		# self.quality_x = quality_x # quality multiplier (0 = 1 | 1 = 1.1 | 2 = 1.2 | 3 = 1.3 | 4 = 1.5 | 5 = 1.8)
-
-#	def gain_xp_recipe(self): # not sure why but this does not add experience points to player when called
-#		if self.timer <= 0:
-#			Player.experience += self.exp_value
 
 	@classmethod
 	def check_recipe_inv(cls):
