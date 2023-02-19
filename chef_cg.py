@@ -113,7 +113,7 @@ def main():
 				player.experience += recipe.exp_value
 				player_level_up(player)
 
-		equip1 = Equipment("\033[32mScrap Oven\033[0m", "Boosts the cooking speed of Roasted Potatoes by 5 seconds", 0, 5, 1)
+		equip1 = Equipment("1. \033[32mPotato Spatula\033[0m", "Boosts the cooking speed of all recipes by 5 seconds", 0, 5, 1)
 		Equipment.equip_inv.append(equip1)
 		Equipment.check_equip_inv()
 
