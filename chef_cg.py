@@ -10,9 +10,14 @@
 import time
 from chef_skeleton import *
 
-def timer(recipe_list, recipe):
-	print(recipe.name, "Has started cooking:", recipe.timer)
-	time.sleep(recipe.timer)
+def timer(recipe, equipment):
+	recipe_timer = recipe.timer - equipment.effect
+	print(f"{equipment.name} Has been used!")
+	equipment.quantity -= 1
+	equipment.equip_inv.remove(equipment)
+
+	print(recipe.name, "Has started cooking:", recipe_timer)
+	time.sleep(recipe_timer)
 	print(recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
 
 def player_level_up(player):
@@ -72,9 +77,49 @@ def player_level_up(player):
 # game loop
 def main():
 	while True:	
-		recipe1 = Recipe("1. \033[32mRoasted Potatoes\033[0m", 1000, 0, 5)
-		recipe2 = Recipe("2. \033[32;1mChicken with Roasted Potatoes\033[0m", 1500, 1, 5)
-		recipe3 = Recipe("3. \033[35mMashed Potatoes\033[0m", 3000, 3, 5)
+		def cooking_input():
+			recipe_list = Recipe.recipe_inv
+			equip_list = Equipment.equip_inv
+
+			print("Select the recipe you want to cook")
+
+			for recipe in recipe_list:
+				print(f"{recipe.name}")
+			try:
+				recipe_index = int(input("Select the desired recipe: ")) - 1
+			except ValueError:
+				print("Incorrect selection, please enter in a correct number within the inventory")
+				return cooking_input()
+
+			if len(equip_list) > 0:
+				for equip in equip_list:
+					print(f"{equip.name}")
+				try:
+					equip_select = int(input("Select your equipment: ")) - 1
+				except ValueError:
+					print("Incorrect selection, please select an item from the list")
+					return cooking_input()
+
+			if recipe_index >= 0:
+				try:
+					recipe = recipe_list[recipe_index]
+					equipment = equip_list[equip_select]
+				except IndexError:
+					print("Selection is not in your inventory, please select an item from the inventory!")
+					recipe = None
+					return cooking_input()
+
+				timer(recipe, equipment)
+				player.experience += recipe.exp_value
+				player_level_up(player)
+
+		equip1 = Equipment("\033[32mScrap Oven\033[0m", "Boosts the cooking speed of Roasted Potatoes by 5 seconds", 0, 5, 1)
+		Equipment.equip_inv.append(equip1)
+		Equipment.check_equip_inv()
+
+		recipe1 = Recipe("1. \033[32mRoasted Potatoes\033[0m", 100, 0, 10)
+		recipe2 = Recipe("2. \033[32mChicken with Roasted Potatoes\033[0m", 100, 0, 5)
+		recipe3 = Recipe("3. \033[32mMashed Potatoes\033[0m", 100, 0, 5)
 
 		print("Hello young chef, welcome to the kitchen!")
 		time.sleep(1)
@@ -83,60 +128,14 @@ def main():
 		player = Player(playername, 0, 0, 0, 0)
 		player_level_up(player)
 
-		time.sleep(1)
-
-		print("To become a true master of the cooking arts, you will need to learn some recipes")
-		time.sleep(1.7)
-		print("How about I teach you one right now!")
-		time.sleep(1)
-
 		Recipe.recipe_inv.append(recipe1)
 		print("\033[33;1mNew recipe gained!!\033[0m")
 		time.sleep(1)
 		Recipe.check_recipe_inv()
 
-		def tutorial_cooking_input():
-			recipe_list = Recipe.recipe_inv
+		cooking_input()	
 
-			print("Select the recipe you want to cook")
-
-			for recipe in recipe_list:
-				print(f"{recipe.name}")
-
-			recipe_index = int(input("Select the desired recipe: ")) - 1
-
-			if recipe_index >= 0:
-				recipe = recipe_list[recipe_index]
-				timer(recipe_list, recipe)
-				player.experience += recipe.exp_value
-				player_level_up(player)
-			else:
-				print("Invalid entry, please enter a number starting from 0")	
-
-		print("Let's start off by practicing your cooking skills")
-		time.sleep(1)
-		print("So first you will want to select the option to cook, which I will give you now")
-		tutorial_cooking_input()
-
-		time.sleep(1)
-
-		print("Congratulations on cooking your first meal!")
-		time.sleep(1)
-		print("You have now earned another recipe! use this knowledge wisely")
-		Recipe.recipe_inv.append(recipe2)
-		print("\033[33;1mNew recipe gained!!\033[0m")
-		time.sleep(1)		
-		Recipe.check_recipe_inv()
-		time.sleep(1)
-
-		print("How about we cook another recipe?")
-		time.sleep(1)
-		tutorial_cooking_input()
-		time.sleep(1)
-		Recipe.recipe_inv.append(recipe3)
-		print("\033[33;1mNew recipe gained!!\033[0m")
-		time.sleep(1)
-		Recipe.check_recipe_inv()
+		Equipment.check_equip_inv()
 
 		break
 main()

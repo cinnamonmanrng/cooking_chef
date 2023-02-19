@@ -57,21 +57,52 @@ class Experience(Player):
 
 
 class Item:
-	def __init__(self, name, description, rating, quantity):
+	def __init__(self, name, description, rating, effect, quantity):
 		self.name = name
 		self.description = description
 		self.rating = rating
+		self.effect = effect
 		self.quantity = quantity
 	def print_info(self):
 		print(f'{self.name}: {self.description} | Rating: {self.rating} | Amount: {self.quantity}') # print info for player inventory check
 
 class Equipment(Item):
-	def __init__(self, name, description, rating, quantity):
-		super().__init__(name, description, rating, quantity)
+	equip_inv = []
+
+	def __init__(self, name, description, rating, effect, quantity):
+		super().__init__(name, description, rating, effect, quantity)
+
+	@classmethod
+	def check_equip_inv(cls):
+		if len(cls.equip_inv) == 0:
+			print("You do not have any equipment")
+		else:
+			for equip in cls.equip_inv:
+				equip.print_equip_info()
+
+	def print_equip_info(self):
+		print(f'{self.name}: {self.description} | Rating: {Equipment.equip_quality(self)} | Amount: {self.quantity}')
+
+	def equip_quality(self):
+		if self.rating == 0:
+			return "☆"
+		elif self.rating == 1:
+			return "★"
+		elif self.rating == 2:
+			return "★★"
+		elif self.rating == 3:
+			return "★★★"
+		elif self.rating == 4:
+			return "★★★★"
+		elif self.rating == 5:
+			return "★★★★★"
+		else:
+			print("Unrecognised Rating")
+
 
 class Booster(Item):
-	def __init__(self, name, description, rating, quantity, duration):
-		super().__init__(name, description, rating, quantity)
+	def __init__(self, name, description, rating, effect, quantity, duration):
+		super().__init__(name, description, rating, effect, quantity)
 		self.duration = duration
 
 	def print_booster_info(self):
