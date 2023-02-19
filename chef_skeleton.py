@@ -69,9 +69,14 @@ class Equipment(Item):
 	def __init__(self, name, description, rating, quantity):
 		super().__init__(name, description, rating, quantity)
 
-class Equip_part(Item):
-	def __init__(self, name, description, rating, quantity):
+class Booster(Item):
+	def __init__(self, name, description, rating, quantity, duration):
 		super().__init__(name, description, rating, quantity)
+		self.duration = duration
+
+	def print_booster_info(self):
+		print(f'{self.name}: {self.description} | Rating: {self.rating} | Amount: {self.quantity} | Duration: {self.duration}')
+
 
 class Recipe:
 	recipe_inv = []

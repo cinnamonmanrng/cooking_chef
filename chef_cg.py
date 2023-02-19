@@ -9,15 +9,17 @@
 # mythic/unique: \033[36;1m
 import time
 from chef_skeleton import *
-import random
 
 def timer(recipe_list, recipe):
 	print(recipe.name, "Has started cooking:", recipe.timer)
 	time.sleep(recipe.timer)
 	print(recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
 
-def level_up_1(player):
+def player_level_up(player):
 	if player.level == 0:
+		player.max_xp = 1000
+		player.next_level = 1
+
 		if player.experience >= player.max_xp:
 			player.level = 1
 			player.max_xp = 2500
@@ -27,51 +29,60 @@ def level_up_1(player):
 		else:
 			player.print_status()
 
-def level_up_2(player):
-	if player.level == 1:
+	elif player.level == 1:
 		if player.experience >= player.max_xp:
 			player.level = 2
 			player.max_xp = 5000
 			player.next_level = 3
+			print("\033[33;1mYour rating has increased!!\033[0m") 
+			player.print_status()
+		else:
+			player.print_status()
 
-def level_up_3(player):
-	if player.level == 2:
+	elif player.level == 2:
 		if player.experience >= player.max_xp:
 			player.level = 3
 			player.max_xp = 10000
 			player.next_level = 4
+			print("\033[33;1mYour rating has increased!!\033[0m") 
+			player.print_status()
+		else:
+			player.print_status()
 
-def level_up_4(player):
-	if player.level == 3:
+	elif player.level == 3:
 		if player.experience >= player.max_xp:
 			player.level = 4
 			player.max_xp = 20000
 			player.next_level = 5
+			print("\033[33;1mYour rating has increased!!\033[0m") 
+			player.print_status()
+		else:
+			player.print_status()
 
-def level_up_5(player):
-	if player.level == 4:
+	elif player.level == 4:
 		if player.experience >= player.max_xp:
 			player.level = 5
-			player.max_xp = "MAX"
+			player.max_xp = "∞"
 			player.next_level = "MAX"
-		
+			print("\033[33;1mYour rating has increased!!\033[0m") 
+			player.print_status()
+		else:
+			player.print_status()											
 
 # game loop
 def main():
 	while True:	
-		recipe1 = Recipe("1. \033[32mRoasted Potatoes\033[0m", 30, 0, 5)
-		recipe2 = Recipe("2. \033[32mChicken with Roasted Potatoes\033[0m", 45, 0, 150)
-		recipe3 = Recipe("3. \033[32mMashed Potatoes\033[0m", 20, 0, 100)
+		recipe1 = Recipe("1. \033[32mRoasted Potatoes\033[0m", 1000, 0, 5)
+		recipe2 = Recipe("2. \033[32;1mChicken with Roasted Potatoes\033[0m", 1500, 1, 5)
+		recipe3 = Recipe("3. \033[35mMashed Potatoes\033[0m", 3000, 3, 5)
 
 		print("Hello young chef, welcome to the kitchen!")
 		time.sleep(1)
 		playername = input("To start off, what is your name?: ")
 
-		player = Player(playername, 0, 0, 1000, 1)
+		player = Player(playername, 0, 0, 0, 0)
+		player_level_up(player)
 
-		print("\n")
-		player.print_status()
-		print("\n")
 		time.sleep(1)
 
 		print("To become a true master of the cooking arts, you will need to learn some recipes")
@@ -90,7 +101,7 @@ def main():
 			print("Select the recipe you want to cook")
 
 			for recipe in recipe_list:
-				print(recipe.name)
+				print(f"{recipe.name}")
 
 			recipe_index = int(input("Select the desired recipe: ")) - 1
 
@@ -98,7 +109,7 @@ def main():
 				recipe = recipe_list[recipe_index]
 				timer(recipe_list, recipe)
 				player.experience += recipe.exp_value
-				level_up_1(player)
+				player_level_up(player)
 			else:
 				print("Invalid entry, please enter a number starting from 0")	
 
@@ -106,6 +117,26 @@ def main():
 		time.sleep(1)
 		print("So first you will want to select the option to cook, which I will give you now")
 		tutorial_cooking_input()
+
+		time.sleep(1)
+
+		print("Congratulations on cooking your first meal!")
+		time.sleep(1)
+		print("You have now earned another recipe! use this knowledge wisely")
+		Recipe.recipe_inv.append(recipe2)
+		print("\033[33;1mNew recipe gained!!\033[0m")
+		time.sleep(1)		
+		Recipe.check_recipe_inv()
+		time.sleep(1)
+
+		print("How about we cook another recipe?")
+		time.sleep(1)
+		tutorial_cooking_input()
+		time.sleep(1)
+		Recipe.recipe_inv.append(recipe3)
+		print("\033[33;1mNew recipe gained!!\033[0m")
+		time.sleep(1)
+		Recipe.check_recipe_inv()
 
 		break
 main()
