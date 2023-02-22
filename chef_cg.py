@@ -10,15 +10,22 @@
 import time
 from chef_skeleton import *
 
-def timer(recipe, equipment):
-	recipe_timer = recipe.timer - equipment.effect
-	print(f"{equipment.name} Has been used!")
-	equipment.quantity -= 1
-	equipment.equip_inv.remove(equipment)
+def timer(recipe, equipment, equip_use_select):
+	if equip_use_select == True:
+		recipe.timer = recipe.timer - equipment.effect
+		print(f"{equipment.name} Has been used!")
+		equipment.quantity -= 1
+		if equipment.quantity == 0:
+			equipment.equip_inv.remove(equipment)
 
-	print(recipe.name, "Has started cooking:", recipe_timer)
-	time.sleep(recipe_timer)
+	if recipe.timer < 0:
+		recipe.timer = 0
+	print(recipe.name, "Has started cooking:", recipe.timer)		
+	time.sleep(recipe.timer)
 	print(recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
+	recipe.quantity -= 1
+	if recipe.quantity == 0:
+		recipe.recipe_inv.remove(recipe)	
 
 def player_level_up(player):
 	if player.level == 0:
@@ -74,52 +81,74 @@ def player_level_up(player):
 		else:
 			player.print_status()											
 
+
+def cooking_input(player):
+	recipe_list = Recipe.recipe_inv
+	equip_list = Equipment.equip_inv
+
+	print("Select the recipe you want to cook")
+
+	for recipe in recipe_list:
+		print(f"{recipe.name}")
+	try:
+		recipe_index = int(input("Select the desired recipe: ")) - 1
+	except ValueError:
+		print("Incorrect selection, please enter in a correct number within the inventory")
+		return cooking_input(player)
+
+
+	equip_use_select = str(input("Do you want to use an equipment for this recipe? (Y/N): "))
+
+	if equip_use_select.upper() == "Y":
+		equip_use_select = True
+		if len(equip_list) > 0:
+			for equip in equip_list:
+				print(f"{equip.name}")
+			try:
+				equip_select = int(input("Select your equipment: ")) - 1
+			except ValueError:
+				print("Incorrect selection, please select an item from the list")
+				return cooking_input(player)
+		elif len(equip_list) <= 0:
+			print("You do not have any equipment to select!")
+			equip_use_select = False
+			equip_select = None
+			equipment = None
+
+	elif equip_use_select.upper() == "N":
+		equip_use_select = False
+		equip_select = None
+		equipment = None
+	else:
+		print("Invalid input, please try again!")
+		return cooking_input(player)
+
+	if recipe_index >= 0:
+		try:
+			recipe = recipe_list[recipe_index]
+			if equip_use_select == True:
+				equipment = equip_list[equip_select]
+		except IndexError:
+			print("Selection is not in your inventory, please select an item from the inventory!")
+			recipe = None
+			return cooking_input(player)
+		timer(recipe, equipment, equip_use_select)
+		player.experience += recipe.exp_value
+		player_level_up(player)
+
 # game loop
 def main():
 	while True:	
-		def cooking_input():
-			recipe_list = Recipe.recipe_inv
-			equip_list = Equipment.equip_inv
 
-			print("Select the recipe you want to cook")
-
-			for recipe in recipe_list:
-				print(f"{recipe.name}")
-			try:
-				recipe_index = int(input("Select the desired recipe: ")) - 1
-			except ValueError:
-				print("Incorrect selection, please enter in a correct number within the inventory")
-				return cooking_input()
-
-			if len(equip_list) > 0:
-				for equip in equip_list:
-					print(f"{equip.name}")
-				try:
-					equip_select = int(input("Select your equipment: ")) - 1
-				except ValueError:
-					print("Incorrect selection, please select an item from the list")
-					return cooking_input()
-
-			if recipe_index >= 0:
-				try:
-					recipe = recipe_list[recipe_index]
-					equipment = equip_list[equip_select]
-				except IndexError:
-					print("Selection is not in your inventory, please select an item from the inventory!")
-					recipe = None
-					return cooking_input()
-
-				timer(recipe, equipment)
-				player.experience += recipe.exp_value
-				player_level_up(player)
-
-		equip1 = Equipment("1. \033[32mPotato Spatula\033[0m", "Boosts the cooking speed of all recipes by 5 seconds", 0, 5, 1)
+		equip1 = Equipment("\033[32mPotato Spatula\033[0m", "Boosts the cooking speed of all recipes by 5 seconds", 0, 5, 1)
+		equip2 = Equipment("\033[32;1mAdvanced Potato Spatula\033[0m", "Boosts the cooking speed of all recipes by 10 seconds", 1, 10, 1)
 		Equipment.equip_inv.append(equip1)
+		Equipment.equip_inv.append(equip2)	 
 		Equipment.check_equip_inv()
 
-		recipe1 = Recipe("1. \033[32mRoasted Potatoes\033[0m", 100, 0, 10)
-		recipe2 = Recipe("2. \033[32mChicken with Roasted Potatoes\033[0m", 100, 0, 5)
-		recipe3 = Recipe("3. \033[32mMashed Potatoes\033[0m", 100, 0, 5)
+		recipe1 = Recipe("\033[32mRoasted Potatoes\033[0m", 100, 0, 10, 1)
+		recipe2 = Recipe("\033[32mChicken with Roasted Potatoes\033[0m", 100, 0, 5, 1)
+		recipe3 = Recipe("\033[32mMashed Potatoes\033[0m", 100, 0, 5, 1)
 
 		print("Hello young chef, welcome to the kitchen!")
 		time.sleep(1)
@@ -129,13 +158,15 @@ def main():
 		player_level_up(player)
 
 		Recipe.recipe_inv.append(recipe1)
+		Recipe.recipe_inv.append(recipe2)
 		print("\033[33;1mNew recipe gained!!\033[0m")
 		time.sleep(1)
 		Recipe.check_recipe_inv()
 
-		cooking_input()	
+		cooking_input(player)	
 
 		Equipment.check_equip_inv()
+		Recipe.check_recipe_inv()
 
 		break
 main()

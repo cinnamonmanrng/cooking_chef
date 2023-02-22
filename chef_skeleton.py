@@ -1,3 +1,5 @@
+import random
+
 class Player:
 	player_inventory = []
 
@@ -98,25 +100,16 @@ class Equipment(Item):
 			return "★★★★★"
 		else:
 			print("Unrecognised Rating")
-
-
-class Booster(Item):
-	def __init__(self, name, description, rating, effect, quantity, duration):
-		super().__init__(name, description, rating, effect, quantity)
-		self.duration = duration
-
-	def print_booster_info(self):
-		print(f'{self.name}: {self.description} | Rating: {self.rating} | Amount: {self.quantity} | Duration: {self.duration}')
-
-
+			
 class Recipe:
 	recipe_inv = []
 
-	def __init__(self, name, exp_value, quality, timer):
+	def __init__(self, name, exp_value, quality, timer, quantity):
 		self.name = name
 		self.exp_value = exp_value
 		self.quality = quality
 		self.timer = timer # in seconds
+		self.quantity = quantity
 		# self.quality_x = quality_x # quality multiplier (0 = 1 | 1 = 1.1 | 2 = 1.2 | 3 = 1.3 | 4 = 1.5 | 5 = 1.8)
 
 	@classmethod
@@ -144,4 +137,4 @@ class Recipe:
 			print("Unrecognised quality")
 
 	def print_info(self):
-		print(f'{self.name}: XP gained from this recipe: {self.exp_value} | Quality: {Recipe.recipe_quality(self)} | Time to cook: {self.timer}')
+		print(f'{self.name}: XP gained from this recipe: {self.exp_value} | Quality: {Recipe.recipe_quality(self)} | Time to cook: {self.timer} | Amount: {self.quantity}')
