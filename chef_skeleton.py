@@ -29,14 +29,24 @@ class Experience(Player):
 		if self.level == 0:
 			return "Unrecognised"
 		elif self.level == 1:
-			return "★"
+			return "☆"
 		elif self.level == 2:
-			return "★★"
+			return "☆☆"
 		elif self.level == 3:
-			return "★★★"
+			return "☆☆☆"
 		elif self.level == 4:
-			return "★★★★"
+			return "☆☆☆☆"
 		elif self.level == 5:
+			return "☆☆☆☆☆"
+		elif self.level == 6:
+			return "★☆☆☆☆"
+		elif self.level == 7:
+			return "★★☆☆☆"
+		elif self.level == 8:
+			return "★★★☆☆"
+		elif self.level == 9:
+			return "★★★★☆"
+		elif self.level == 10:
 			return "★★★★★"
 		else: 
 			return "Invalid Level"
@@ -45,15 +55,25 @@ class Experience(Player):
 		if self.level == 0 and self.next_level == 1:
 				return "☆"
 		elif self.level == 1 and self.next_level == 2:
-			return "★☆"
+			return "☆☆"
 		elif self.level == 2 and self.next_level == 3:
-			return "★★☆"
+			return "☆☆☆"
 		elif self.level == 3 and self.next_level == 4:
-			return "★★★☆"
+			return "☆☆☆☆"
 		elif self.level == 4 and self.next_level == 5:
+			return "☆☆☆☆☆"
+		elif self.level == 5 and self.next_level == 6:
+			return "★☆☆☆☆"
+		elif self.level == 6 and self.next_level == 7:
+			return "★★☆☆☆"
+		elif self.level == 7 and self.next_level == 8:
+			return "★★★☆☆"
+		elif self.level == 8 and self.next_level == 9:
 			return "★★★★☆"
-		elif self.level == 5 and self.next_level == "MAX":
+		elif self.level == 9 and self.next_level == 10:
 			return "★★★★★"
+		elif self.level == 10 and self.next_level == "MAX":
+			return "Max Level Reached"
 		else:
 			return "Invalid next level"
 
