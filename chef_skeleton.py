@@ -110,7 +110,6 @@ class Recipe:
 		self.quality = quality
 		self.timer = timer # in seconds
 		self.quantity = quantity
-		# self.quality_x = quality_x # quality multiplier (0 = 1 | 1 = 1.1 | 2 = 1.2 | 3 = 1.3 | 4 = 1.5 | 5 = 1.8)
 
 	@classmethod
 	def check_recipe_inv(cls):
@@ -138,3 +137,5 @@ class Recipe:
 
 	def print_info(self):
 		print(f'{self.name}: XP gained from this recipe: {self.exp_value} | Quality: {Recipe.recipe_quality(self)} | Time to cook: {self.timer} | Amount: {self.quantity}')
+
+		
