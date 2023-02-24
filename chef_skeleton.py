@@ -91,8 +91,9 @@ class Item:
 class Equipment(Item):
 	equip_inv = []
 
-	def __init__(self, name, description, rating, effect, quantity):
+	def __init__(self, name, description, rating, effect, quantity, unique_id):
 		super().__init__(name, description, rating, effect, quantity)
+		self.unique_id = unique_id
 
 	@classmethod
 	def check_equip_inv(cls):
@@ -124,12 +125,13 @@ class Equipment(Item):
 class Recipe:
 	recipe_inv = []
 
-	def __init__(self, name, exp_value, quality, timer, quantity):
+	def __init__(self, name, exp_value, quality, timer, quantity, unique_id):
 		self.name = name
 		self.exp_value = exp_value
 		self.quality = quality
 		self.timer = timer # in seconds
 		self.quantity = quantity
+		self.unique_id = unique_id
 
 	@classmethod
 	def check_recipe_inv(cls):

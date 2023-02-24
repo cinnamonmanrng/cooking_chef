@@ -12,11 +12,16 @@ from chef_skeleton import *
 
 def timer(recipe, equipment, equip_use_select):
 	if equip_use_select == True:
-		recipe.timer = recipe.timer - equipment.effect
-		print(f"{equipment.name} Has been used!")
-		equipment.quantity -= 1
-		if equipment.quantity <= 0:
-			equipment.equip_inv.remove(equipment)
+		if recipe.unique_id != "a106" and equipment.unique_id == "c107":
+			print("This equipment cannot be used for this recipe!")
+			equip_use_select = False
+			equipment = None
+		else:
+			recipe.timer = recipe.timer - equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				equipment.equip_inv.remove(equipment)
 
 	if recipe.timer < 0:
 		recipe.timer = 0
@@ -125,7 +130,7 @@ def player_level_up(player):
 			player.next_level = "MAX"
 			print("\033[33;1mYour rating has increased!!\033[0m")	
 			player.print_status()
-#			equip4 = Equipment("\033[36;1mMythical Chef's Hat\033[0m", "Boosts cooking speed of all recipes by 35 seconds", 5, 35, 200)
+#			equip4 = Equipment("\033[36;1mMythical Chef's Hat\033[0m", "Boosts cooking speed of all recipes by 35 seconds", 5, 35, 200, "put id here")
 #			Equipment.equip_inv.append(equip4)
 #			equip4.print_equip_info()
 		else:
