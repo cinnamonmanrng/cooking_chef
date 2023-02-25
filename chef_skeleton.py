@@ -13,12 +13,12 @@ class Player:
 	def print_status(self):
 		print(f"{self.name} | Rating: {Experience.get_level_star(self)} | XP: {self.experience} / {self.max_xp} until {Experience.next_level_star(self)}")
 
-	def check_inventory(self):
-		if len(self.inventory) == 0:
-			print("Your inventory is empty, check again later!")
+	def check_inv(self):
+		if len(self.player_inventory) == 0:
+			print("Your inventory is empty!")
 		else:
-			for item in self.inventory:
-				Item.print_info()
+			for recipe in self.player_inventory:
+				recipe.print_info()
 
 class Experience(Player):
 	def __init__(self, experience, next_level, level):
@@ -79,11 +79,10 @@ class Experience(Player):
 
 
 class Item:
-	def __init__(self, name, description, rating, effect, quantity):
+	def __init__(self, name, description, rating, quantity):
 		self.name = name
 		self.description = description
 		self.rating = rating
-		self.effect = effect
 		self.quantity = quantity
 	def print_info(self):
 		print(f'{self.name}: {self.description} | Rating: {self.rating} | Amount: {self.quantity}') # print info for player inventory check
@@ -92,8 +91,9 @@ class Equipment(Item):
 	equip_inv = []
 
 	def __init__(self, name, description, rating, effect, quantity, unique_id):
-		super().__init__(name, description, rating, effect, quantity)
+		super().__init__(name, description, rating, quantity)
 		self.unique_id = unique_id
+		self.effect = effect
 
 	@classmethod
 	def check_equip_inv(cls):
@@ -121,7 +121,47 @@ class Equipment(Item):
 			return "★★★★★"
 		else:
 			print("Unrecognised Rating")
-			
+
+class LootBox(Item):
+	loot_inv = []
+
+	def __init__(self, name, description, rating, quantity, unique_id):
+		super().__init__(name, description, rating, quantity)
+		self.unique_id = unique_id	
+
+	def add_to_recipe(self, loot_random_item):
+		Player.player_inventory.append(loot_random_item)
+
+	def loot_open(self):
+		loot_items_list = Recipe.recipe_inv
+		loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+		
+
+	def loot_print_info(self):
+		print(f"{self.name}: {self.description} | Rating: {LootBox.loot_rating(self)} | Amount: {self.quantity}")
+
+	@classmethod
+	def check_loot_inv(cls):
+		if len(cls.loot_inv) == 0:
+			print("You do not have any lootboxes!")
+		else:
+			for lootbox in cls.loot_inv:
+				lootbox.loot_print_info()
+
+	def loot_rating(self):
+		if self.rating == 0:
+			return "☆"
+		elif self.rating == 1:
+			return "★"
+		elif self.rating == 2:
+			return "★★"
+		elif self.rating == 3:
+			return "★★★"
+		elif self.rating == 4:
+			return "★★★★"
+		elif self.rating == 5:
+			return "★★★★★"
+
 class Recipe:
 	recipe_inv = []
 
@@ -131,7 +171,7 @@ class Recipe:
 		self.quality = quality
 		self.timer = timer # in seconds
 		self.quantity = quantity
-		self.unique_id = unique_id
+		self.unique_id = unique_id # used to check unique equipment against recipes
 
 	@classmethod
 	def check_recipe_inv(cls):

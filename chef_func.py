@@ -32,7 +32,24 @@ def timer(recipe, equipment, equip_use_select):
 	recipe.quantity -= 1
 
 	if recipe.quantity <= 0:
-		recipe.recipe_inv.remove(recipe)
+		Player.player_inventory.remove(recipe)
+
+def open_lootbox():
+	loot_list = LootBox.loot_inv
+
+	if len(LootBox.loot_inv) <= 1:
+		print("Do you want to open a LootBox™? (Y/N)")
+		loot_open_input = input()
+		if loot_open_input.upper() == "Y":
+			for index, lootbox in enumerate(loot_list, 1):
+				print(index, f"{lootbox.name}")
+				select_box = input("Select your lootbox: ")
+				lootbox.loot_open()
+				lootbox.add_to_recipe(loot_random_item)
+		elif loot_open_input.upper() == "N":
+			pass
+		else:
+			print("Invalid input, Please try again!")
 
 def player_level_up(player):
 	if player.level == 0:
@@ -141,7 +158,7 @@ def player_level_up(player):
 		player.print_status()
 
 def cooking_input(player):
-	recipe_list = Recipe.recipe_inv
+	recipe_list = Player.player_inventory
 	equip_list = Equipment.equip_inv
 
 	print("Select the recipe you want to cook")
