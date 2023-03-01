@@ -2,6 +2,7 @@ import random
 
 class Player:
 	player_inventory = []
+	player_equip_inv = []
 
 	def __init__(self, name, level, experience, max_xp, next_level):
 		self.name = name
@@ -11,7 +12,7 @@ class Player:
 		self.next_level = next_level
 
 	def print_status(self):
-		print(f"{self.name} | Rating: {Experience.get_level_star(self)} | XP: {self.experience} / {self.max_xp} until {Experience.next_level_star(self)}")
+		print(f"Name: {self.name} \nRating: {Experience.get_level_star(self)} \nXP: {self.experience} / {self.max_xp} until {Experience.next_level_star(self)}")
 
 	def check_inv(self):
 		if len(self.player_inventory) == 0:
@@ -19,6 +20,13 @@ class Player:
 		else:
 			for recipe in self.player_inventory:
 				recipe.print_info()
+
+	def check_equip_inv(self):
+		if len(self.player_equip_inv) == 0:
+			print("You do not own any items!")
+		else:
+			for equip in self.player_equip_inv:
+				equip.print_equip_info()
 
 class Experience(Player):
 	def __init__(self, experience, next_level, level):
@@ -88,7 +96,7 @@ class Item:
 		print(f'{self.name}: {self.description} | Rating: {self.rating} | Amount: {self.quantity}') # print info for player inventory check
 
 class Equipment(Item):
-	equip_inv = []
+	equipbox1_inv = []
 
 	def __init__(self, name, description, rating, effect, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -97,10 +105,10 @@ class Equipment(Item):
 
 	@classmethod
 	def check_equip_inv(cls):
-		if len(cls.equip_inv) == 0:
+		if len(cls.equipbox1_inv) == 0:
 			print("You do not have any equipment")
 		else:
-			for equip in cls.equip_inv:
+			for equip in cls.equipbox1_inv:
 				equip.print_equip_info()
 
 	def print_equip_info(self):
@@ -129,14 +137,24 @@ class LootBox(Item):
 		super().__init__(name, description, rating, quantity)
 		self.unique_id = unique_id	
 
-	def add_to_recipe(self, loot_random_item):
+	@staticmethod
+	def add_to_recipe(loot_random_item):
+		print("\033[33;1mNew recipe gained!!\033[0m")
 		Player.player_inventory.append(loot_random_item)
 
-	def loot_open(self):
-		loot_items_list = Recipe.recipe_inv
-		loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-		
+	@staticmethod
+	def add_to_equip(loot_random_item):
+		print("\033[33;1mNew item gained!!\033[0m")
+		Player.player_equip_inv.append(loot_random_item)
 
+	def loot_open(self):
+		if self.unique_id == "a201":
+			loot_items_list = Recipe.lootbox1_inv
+		elif self.unique_id == "a202":
+			loot_items_list = Recipe.lootbox2_inv
+		loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+		LootBox.add_to_recipe(loot_random_item)
+		
 	def loot_print_info(self):
 		print(f"{self.name}: {self.description} | Rating: {LootBox.loot_rating(self)} | Amount: {self.quantity}")
 
@@ -163,7 +181,8 @@ class LootBox(Item):
 			return "★★★★★"
 
 class Recipe:
-	recipe_inv = []
+	lootbox1_inv = [] # lootbox1 in chef_main, other boxes follow the same criteria
+	lootbox2_inv = []
 
 	def __init__(self, name, exp_value, quality, timer, quantity, unique_id):
 		self.name = name

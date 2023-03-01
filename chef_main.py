@@ -7,41 +7,55 @@ equip2 = Equipment("\033[32;1mAdvanced Potato Spatula\033[0m", "Boosts the cooki
 equip3 = Equipment("\033[36;1mExcellent Potato Masher\033[0m", "Boosts the cooking speed of Roasted Potatoes by 15 seconds", 5, 15, 1, "c107")
 recipe1 = Recipe("\033[32mRoasted Potatoes\033[0m", 100, 0, 15, 1, "a106")
 recipe2 = Recipe("\033[32mChicken with Roasted Potatoes\033[0m", 100, 0, 15, 1, "b106")
-recipe3 = Recipe("\033[32mMashed Potatoes\033[0m", 100, 0, 5, 1, "c106")
-lootbox1 = LootBox("\033[32mGeneric LootBox™\033[0m", "The most generic LootBox!", 0, 1, "a201")
+recipe3 = Recipe("\033[32mMashed Potatoes\033[0m", 100, 0, 5, 1, "c106")     
+lootbox1 = LootBox("\033[32mGeneric LootBox™\033[0m", "The most generic LootBox™", 0, 1, "a201")
+lootbox2 = LootBox("\033[32;1mNormal LootBox™\033[0m", "Not the most basic LootBox™", 0, 1, "a202")
 
+Equipment.equipbox1_inv.append(equip1)
+Equipment.equipbox1_inv.append(equip2)
+Equipment.equipbox1_inv.append(equip3)
+Recipe.lootbox1_inv.append(recipe1)
+Recipe.lootbox1_inv.append(recipe2)
+Recipe.lootbox1_inv.append(recipe3)
+LootBox.loot_inv.append(lootbox1)
+# LootBox.loot_inv.append(lootbox2)
+
+# gameloop plan:
+# initalise menu:
+# 1 - start game
+# 2 - new game
+# 3 - load saved game
+# 4 - options - anything like delete character, colours and other settings once the pygame application is done will go here
+# 5 - exit game
+
+# once tutorial has finished (create a finished_tutorial variable to check if tutorial has been finished):
+# 1 - Cook a recipe
+# 2 - browse your inventory
+# 3 - open lootboxes
+# 4 - save game
+# 5 - back to main menu
 def main():
 	while True:	
-		Equipment.equip_inv.append(equip1)
-		Equipment.equip_inv.append(equip2)
-		Equipment.equip_inv.append(equip3)
-		Recipe.recipe_inv.append(recipe1)
-		Recipe.recipe_inv.append(recipe2)
-		Recipe.recipe_inv.append(recipe3)
-
-		LootBox.loot_inv.append(lootbox1)
-		Equipment.check_equip_inv()
-		LootBox.check_loot_inv()
 
 		print("Hello young chef, welcome to the kitchen!")
 		playername = input("To start off, what is your name?: ")
 
 		player = Player(playername, 0, 0, 0, 0)
+		load_game(player)
+
 		player_level_up(player)
 
 		open_lootbox()
 
 		player.player_inventory.append(recipe1)
-#		Recipe.recipe_inv.append(recipe1)
-#		Recipe.recipe_inv.append(recipe2)
-#		Recipe.recipe_inv.append(recipe3)
-#		print("\033[33;1mNew recipe gained!!\033[0m")
 		player.check_inv()
 
 		cooking_input(player)
 
-		Equipment.check_equip_inv()
+		player.check_equip_inv()
 		player.check_inv()
+
+		save_game(player)
 
 		break
 
