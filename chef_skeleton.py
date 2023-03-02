@@ -14,6 +14,9 @@ class Player:
 	def print_status(self):
 		print(f"Name: {self.name} \nRating: {Experience.get_level_star(self)} \nXP: {self.experience} / {self.max_xp} until {Experience.next_level_star(self)}")
 
+	def print_save_status(self):
+		print(f"Name: {self.name} | Rating: {Experience.get_level_star(self)} | XP: {self.experience}")
+
 	def check_inv(self):
 		if len(self.player_inventory) == 0:
 			print("Your inventory is empty!")
@@ -97,6 +100,7 @@ class Item:
 
 class Equipment(Item):
 	equipbox1_inv = []
+	# equipbox2_inv = []
 
 	def __init__(self, name, description, rating, effect, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -135,11 +139,12 @@ class LootBox(Item):
 
 	def __init__(self, name, description, rating, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
-		self.unique_id = unique_id	
+		self.unique_id = unique_id
 
 	@staticmethod
 	def add_to_recipe(loot_random_item):
 		print("\033[33;1mNew recipe gained!!\033[0m")
+		print(f"{Recipe.name}")
 		Player.player_inventory.append(loot_random_item)
 
 	@staticmethod
@@ -148,12 +153,15 @@ class LootBox(Item):
 		Player.player_equip_inv.append(loot_random_item)
 
 	def loot_open(self):
-		if self.unique_id == "a201":
+		if self.unique_id == "a201" or self.unique_id == "b201":
 			loot_items_list = Recipe.lootbox1_inv
+			loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+			LootBox.add_to_recipe(loot_random_item)
 		elif self.unique_id == "a202":
-			loot_items_list = Recipe.lootbox2_inv
-		loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-		LootBox.add_to_recipe(loot_random_item)
+			loot_items_list = Equipment.equipbox1_inv
+			loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+			LootBox.add_to_equip(loot_random_item)
+
 		
 	def loot_print_info(self):
 		print(f"{self.name}: {self.description} | Rating: {LootBox.loot_rating(self)} | Amount: {self.quantity}")
@@ -166,7 +174,7 @@ class LootBox(Item):
 			for lootbox in cls.loot_inv:
 				lootbox.loot_print_info()
 
-	def loot_rating(self):
+	def loot_rating(self): 
 		if self.rating == 0:
 			return "☆"
 		elif self.rating == 1:

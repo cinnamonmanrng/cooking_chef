@@ -39,17 +39,24 @@ def timer(player, recipe, equipment, equip_use_select):
 def open_lootbox():
 	loot_list = LootBox.loot_inv
 
-	if len(LootBox.loot_inv) <= 1:
+	if len(loot_list) >= 1:
+		LootBox.check_loot_inv()
 		print("Do you want to open a LootBox™? (Y/N)")
 		loot_open_input = input()
 		if loot_open_input.upper() == "Y":
-			for index, lootbox in enumerate(loot_list, 1):
-				print(index, f"{lootbox.name}")
-				select_box = input("Select your lootbox: ")
+				for index, lootbox in enumerate(loot_list, 1):
+					print(index, f"{lootbox.name}")
+				try:
+					select_box = int(input("Select your lootbox: ")) - 1
+				except ValueError:
+					print("Incorrect Selection, please try again")
+					return open_lootbox()
 				lootbox.loot_open()
 				lootbox.quantity -= 1
-				lootbox.loot_inv.remove(lootbox)
+				if lootbox.quantity <= 0:
+					lootbox.loot_inv.remove(lootbox)
 		elif loot_open_input.upper() == "N":
+			print("\033[43mLootBox™ not opened!\033[0m")
 			pass
 		else:
 			print("Invalid input, Please try again!")
@@ -171,6 +178,7 @@ def cooking_input(player):
 
 	if len(recipe_list) <= 0:
 		print("You have no recipes in your inventory to cook!")
+		exit()
 	try:
 		recipe_index = int(input("Select the desired recipe: ")) - 1
 	except ValueError:
@@ -218,21 +226,22 @@ def cooking_input(player):
 
 def save_game(player):
 
-	chef_1 = player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv
+	chef = player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv
 
 	file_name = "chef_1.pkl"
 	if os.path.exists(file_name):
-		print("Save file already exists!")
+		print("\033[43mSave file in slot 1 already exists!\033[0m")
 
 		save_input = input("Do you want to overwrite save slot 1? (Y/N): ")
 
 		if save_input.upper() == "Y":
 			with open(file_name, "wb") as file:
-				pickle.dump(chef_1, file)				
-				print("File saved successfully to slot 1")
+				pickle.dump(chef, file)				
+				print("\033[42mFile saved successfully to slot 1\033[0m")
 		elif save_input.upper() == "N":
 			print("1. Save Slot 2")
 			print("2. Save Slot 3")
+			print("3. Leave without saving")
 			try:
 				new_save_input = int(input("Choose your save file slot: ")) - 1
 			except ValueError:
@@ -240,35 +249,77 @@ def save_game(player):
 				return save_game(player)
 
 			if new_save_input == 0:
-				with open("chef_2.pkl", "wb") as file:
-					pickle.dump(chef_1, file)					
-					print("File saved successfully to slot 2")
-			elif new_save_input == 1:
-				with open("chef_3.pkl", "wb") as file:
-					pickle.dump(chef_1, file)				
-					print("File saved successfully to slot 3")					
+				if os.path.exists("chef_2.pkl"):
+					print("\033[43mSave file in slot 2 already exists!\033[0m")
+					overwrite_2 = input("Do you want to overwrite the save in slot 2? (Y/N): ")
+					if overwrite_2.upper() == "Y":
+						with open("chef_2.pkl", "wb") as file:
+							pickle.dump(chef, file)					
+							print("\033[42mGame saved successfully to slot 2\033[0m")
+					elif overwrite_2.upper() == "N":
+						print("\033[43mSave slot 2 not overwritten!\033[0m")
+						return save_game(player)
+					else:
+						print("Invalid selection, please try again!")
+						return save_game(player)
+				elif not os.path.exists("chef_2.pkl"):
+					with open("chef_2.pkl", "wb") as file:
+						pickle.dump(chef, file)
+						print("\033[42mGame saved successfully to slot 2\033[0m")	
 
+			elif new_save_input == 1:
+				if os.path.exists("chef_3.pkl"):
+					print("\033[43mSave file in slot 3 already exists!\033[0m")
+					overwrite_3 = input("Do you want to overwrite the save in slot 3? (Y/N): ")
+					if overwrite_3.upper() == "Y":
+						with open("chef_3.pkl", "wb") as file:
+							pickle.dump(chef, file)				
+							print("\033[42mGame saved successfully to slot 3\033[0m")
+					elif overwrite_3.upper() == "N":
+						print("\033[43mSave slot 3 not overwritten!\033[0m")
+						return save_game(player)
+					else:
+						print("Invalid selection, please try again!")
+						return save_game(player)
+				elif not os.path.exists("chef_3.pkl"):
+					with open("chef_3.pkl", "wb") as file:
+						pickle.dump(chef, file)
+						print("\033[42mGame saved successfully to slot 3\033[0m")	
+
+			elif new_save_input == 2:
+				print("\033[43mGame exited without saving!\033[0m")
+				print("\033[36mThank you for playing!\033[0m")
+				exit()
 		else:
 			print("Invalid input, please try again!")
 			return save_game(player)
 
 	elif not os.path.exists(file_name):
-		with open(file_name, "wb") as file:
-			pickle.dump(chef_1, file)
-			print("File saved successfully to slot 1")
+		ask_to_save = input("Do you want to save your game to slot 1? (Y/N): ")
+		if ask_to_save.upper() == "Y":
+			with open(file_name, "wb") as file:
+				pickle.dump(chef, file)
+				print("File saved successfully to slot 1")
+		elif ask_to_save.upper() == "N":
+			print("\033[43mPlayer data not saved!\033[0m")
+			pass
+			main(player)
 
 def load_game(player):
 	print("1 - Save Slot 1")
 	print("2 - Save Slot 2")
 	print("3 - Save Slot 3")
-	print("4 - Continue without loading")
+	print("4 - Go back") # list names and rating
+	print("5 - Delete a save file")
 	ask_save_load = int(input("Which save slot do you want to open?: "))
 
 	if ask_save_load == 1:
 		if os.path.exists("chef_1.pkl"):
 			with open("chef_1.pkl", "rb") as file:
 				import1 = pickle.load(file)
+				import1_list = list(import1)
 				player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv = import1
+				print(import1_list) # remove this after development
 			print("Save slot 1 loaded successfully!")
 		else:
 			print("Save slot is empty, please try again!")
@@ -277,6 +328,9 @@ def load_game(player):
 		if os.path.exists("chef_2.pkl"):
 			with open("chef_2.pkl", "rb") as file:
 				import2 = pickle.load(file)
+				player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv = import2
+				print(import2) # remove this after development
+			print("Save slot 2 loaded successfully!")
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
@@ -284,8 +338,11 @@ def load_game(player):
 		if os.path.exists("chef_3.pkl"):
 			with open("chef_3.pkl", "rb") as file:
 				import3 = pickle.load(file)
+				player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv = import3
+				print(import3) # remove this after development
+			print("Save slot 3 loaded successfully!")				
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 4:
-		pass
+		print("\033[43mGame successfully loaded without previous save!\033[0m")
