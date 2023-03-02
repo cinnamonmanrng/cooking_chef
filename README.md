@@ -1,7 +1,7 @@
 # cooking_chef
 
 ### Minimum Requirements:
-OS: Windows 10 or later / MacOS: TBA
+OS: Windows 8 or later / MacOS: TBA
 </br>
 Python: Python 3.10 or later 
 </br>
@@ -13,10 +13,18 @@ In order for the game to work, your system needs to have Python 3 installed.
 To do this on Windows 10 or later, here are some steps you can use to install Python 3 on your system:
 - Navigate to Microsoft Store on your PC
 - Search for "Python"
-- Search results should show up with different releases of python. <b>(For the best results, download Python 3.10)</b>
+- Search results should show up with different releases of python. <b>(For the best results, download the latest version of Python 3.10)</b>
 - Once it has finished, you should be able to execute the game.bat file in order to start the game!
-- To check what version your python is on you can follow these steps:
-  - Open powershell in administrator mode
+- To check what version your python is on and if it installed correctly you can follow these steps:
+  - Open powershell("Terminal" in Windows 11) or Command prompt in administrator mode
+  - Write "python3 --version" within the prompt
+</br>
+To do this on Windows 8, Follow these steps to install Python 3:
+- Navigate to [Python Downloads](https://www.python.org/downloads/windows/)
+- Select your desired Python version <b>(For the best results use the latest version of Python 3.10)</b>
+- Follow the installation instructions once your installer has downloaded
+- To check what version your python is on and if it installed correctly you can follow these steps:
+  - Open powershell or Command prompt in administrator mode
   - Write "python3 --version" within the prompt
 ### Issues or enquiries:
 If you have any enquiries, submit them to: cookingchefgame@gmail.com
