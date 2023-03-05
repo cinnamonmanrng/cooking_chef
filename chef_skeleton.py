@@ -140,29 +140,6 @@ class LootBox(Item):
 	def __init__(self, name, description, rating, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
 		self.unique_id = unique_id
-
-	@staticmethod
-	def add_to_recipe(loot_random_item):
-		print("\033[33;1mNew recipe gained!!\033[0m")
-		print(loot_random_item)
-		Player.player_inventory.append(loot_random_item)
-
-	@staticmethod
-	def add_to_equip(loot_random_item):
-		print("\033[33;1mNew item gained!!\033[0m")
-		print(loot_random_item)
-		Player.player_equip_inv.append(loot_random_item)
-
-	def loot_open(self):
-		if self.unique_id == "a201" or self.unique_id == "b201":
-			loot_items_list = Recipe.lootbox1_inv
-			loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-			LootBox.add_to_recipe(loot_random_item)
-		elif self.unique_id == "a202":
-			loot_items_list = Equipment.equipbox1_inv
-			loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-			LootBox.add_to_equip(loot_random_item)
-
 		
 	def loot_print_info(self):
 		print(f"{self.name}: {self.description} | Rating: {LootBox.loot_rating(self)} | Amount: {self.quantity}")

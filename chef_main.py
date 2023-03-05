@@ -12,14 +12,14 @@ import time
 from chef_skeleton import *
 from chef_func import *
 
-version_id = "build:18_05/03/23 | Please email: ccg.issues@gmail.com for any issues you may encounter, Thank you!"
+version_id = "build:19_05/03/23 | Please email: ccg.issues@gmail.com for any issues you may encounter, Thank you!"
 
 equip1 = Equipment("\033[32mPotato Spatula\033[0m", "Boosts the cooking speed of all recipes by 5 seconds", 0, 5, 1, "a107")
 equip2 = Equipment("\033[32;1mAdvanced Potato Spatula\033[0m", "Boosts the cooking speed of all recipes by 10 seconds", 1, 10, 1, "b107")
 equip3 = Equipment("\033[36;1mExcellent Potato Masher\033[0m", "Boosts the cooking speed of Roasted Potatoes by 15 seconds", 5, 15, 1, "c107")
-recipe1 = Recipe("\033[32mRoasted Potatoes\033[0m", 100, 0, 15, 1, "a106")
-recipe2 = Recipe("\033[32mChicken with Roasted Potatoes\033[0m", 100, 0, 10, 1, "b106")
-recipe3 = Recipe("\033[32mMashed Potatoes\033[0m", 100, 0, 5, 1, "c106")     
+recipe1 = Recipe("\033[32mRoasted Potatoes\033[0m", 1000, 0, 15, 1, "a106")
+recipe2 = Recipe("\033[32mChicken with Roasted Potatoes\033[0m", 1000, 0, 10, 1, "b106")
+recipe3 = Recipe("\033[32mMashed Potatoes\033[0m", 1000, 0, 5, 1, "c106")     
 lootbox1 = LootBox("\033[32mGeneric LootBox™\033[0m", "The most generic LootBox™", 0, 1, "a201")
 lootbox2 = LootBox("\033[32;1mNormal LootBox™\033[0m", "The most basic LootBox™ for equipment", 1, 1, "a202")
 lootbox3 = LootBox("\033[34mRare LootBox™\033[0m", "Wow it's rare", 2, 1, "b201")
@@ -59,7 +59,7 @@ def main(player):
 		print("2 - Browse your inventory")
 		print("3 - Open LootBox™")
 		print("4 - Save your game")
-		print("5 - Return to menu")
+		print("5 - Exit game")
 		try:
 			gameloop_input = int(input("Which option would you like to continue with?: "))
 		except ValueError:
@@ -86,13 +86,14 @@ def main(player):
 				LootBox.check_loot_inv()
 				return main(player)
 		elif gameloop_input == 3:
-			open_lootbox()
+			open_lootbox(player)
 			return main(player)
 		elif gameloop_input == 4:
 			save_game(player)
 			return main(player)
 		elif gameloop_input == 5:
-			return main_menu()
+			print("\033[36mThank you for playing!\033[0m")
+			exit()
 
 def main_menu():
 	print("\033[42;15mWelcome to Cooking Chef!\033[0m")

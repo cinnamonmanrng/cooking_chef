@@ -36,7 +36,18 @@ def timer(player, recipe, equipment, equip_use_select):
 	if recipe.quantity <= 0:
 		player.player_inventory.remove(recipe)
 
-def open_lootbox():
+def open_lootbox(player):
+
+	def add_to_recipe(loot_random_item):
+		print("\033[33;1mNew recipe gained!!\033[0m")
+		print(loot_random_item)
+		player.player_inventory.append(loot_random_item)
+
+	def add_to_equip(loot_random_item):
+		print("\033[33;1mNew item gained!!\033[0m")
+		print(loot_random_item)
+		player.player_equip_inv.append(loot_random_item)
+
 	loot_list = LootBox.loot_inv
 
 	if len(loot_list) >= 1:
@@ -50,8 +61,15 @@ def open_lootbox():
 					select_box = int(input("Select your lootbox: ")) - 1
 				except ValueError:
 					print("Incorrect Selection, please try again")
-					return open_lootbox()
-				lootbox.loot_open()
+					return open_lootbox(player)
+				if lootbox.unique_id == "a201" or lootbox.unique_id == "b201":
+					loot_items_list = Recipe.lootbox1_inv
+					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+					add_to_recipe(loot_random_item)
+				elif lootbox.unique_id == "a202":
+					loot_items_list = Equipment.equipbox1_inv
+					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+					add_to_equip(loot_random_item)
 				lootbox.quantity -= 1
 				if lootbox.quantity <= 0:
 					lootbox.loot_inv.remove(lootbox)
@@ -60,6 +78,8 @@ def open_lootbox():
 			pass
 		else:
 			print("Invalid input, Please try again!")
+
+
 
 def player_level_up(player):
 	if player.level == 0:
