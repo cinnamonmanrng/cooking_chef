@@ -144,12 +144,13 @@ class LootBox(Item):
 	@staticmethod
 	def add_to_recipe(loot_random_item):
 		print("\033[33;1mNew recipe gained!!\033[0m")
-		print(f"{Recipe.name}")
+		print(loot_random_item)
 		Player.player_inventory.append(loot_random_item)
 
 	@staticmethod
 	def add_to_equip(loot_random_item):
 		print("\033[33;1mNew item gained!!\033[0m")
+		print(loot_random_item)
 		Player.player_equip_inv.append(loot_random_item)
 
 	def loot_open(self):

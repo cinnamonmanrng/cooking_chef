@@ -12,7 +12,7 @@ import time
 from chef_skeleton import *
 from chef_func import *
 
-version_id = "build:17_02/03/23 | Please email: ccg.issues@gmail.com for any issues you may encounter, Thank you!"
+version_id = "build:18_05/03/23 | Please email: ccg.issues@gmail.com for any issues you may encounter, Thank you!"
 
 equip1 = Equipment("\033[32mPotato Spatula\033[0m", "Boosts the cooking speed of all recipes by 5 seconds", 0, 5, 1, "a107")
 equip2 = Equipment("\033[32;1mAdvanced Potato Spatula\033[0m", "Boosts the cooking speed of all recipes by 10 seconds", 1, 10, 1, "b107")

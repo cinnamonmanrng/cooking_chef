@@ -34,7 +34,7 @@ def timer(player, recipe, equipment, equip_use_select):
 	recipe.quantity -= 1
 
 	if recipe.quantity <= 0:
-		Player.player_inventory.remove(recipe)
+		player.player_inventory.remove(recipe)
 
 def open_lootbox():
 	loot_list = LootBox.loot_inv
@@ -168,8 +168,8 @@ def player_level_up(player):
 		player.print_status()
 
 def cooking_input(player):
-	recipe_list = Player.player_inventory
-	equip_list = Player.player_equip_inv
+	recipe_list = player.player_inventory
+	equip_list = player.player_equip_inv
 
 	print("Select the recipe you want to cook")
 
@@ -177,8 +177,8 @@ def cooking_input(player):
 		print(index, f"{recipe.name}")
 
 	if len(recipe_list) <= 0:
-		print("You have no recipes in your inventory to cook!")
-		exit()
+		print("\033[43mYou have no recipes in your inventory to cook!\033[0m")
+		return
 	try:
 		recipe_index = int(input("Select the desired recipe: ")) - 1
 	except ValueError:
@@ -303,7 +303,6 @@ def save_game(player):
 		elif ask_to_save.upper() == "N":
 			print("\033[43mPlayer data not saved!\033[0m")
 			pass
-			main(player)
 
 def load_game(player):
 	print("1 - Save Slot 1")
@@ -318,8 +317,15 @@ def load_game(player):
 			with open("chef_1.pkl", "rb") as file:
 				import1 = pickle.load(file)
 				import1_list = list(import1)
-				player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv = import1
-				print(import1_list) # remove this after development
+				player.name, player.level, player.experience, player.max_xp, player.next_level = import1[:5]
+				recipes = import1[5]
+				equipments = import1[6]
+				lootboxes = import1[7]
+				print(recipes + equipments + lootboxes)
+				player.player_inventory = recipes
+				player.player_equip_inv = equipments
+				LootBox.loot_inv = lootboxes
+				print(import1) # remove this after development
 			print("Save slot 1 loaded successfully!")
 		else:
 			print("Save slot is empty, please try again!")
@@ -345,4 +351,4 @@ def load_game(player):
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 4:
-		print("\033[43mGame successfully loaded without previous save!\033[0m")
+		return # maybe use os.path.exists for this?
