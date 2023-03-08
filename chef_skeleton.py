@@ -14,9 +14,6 @@ class Player:
 	def print_status(self):
 		print(f"Name: {self.name} \nRating: {Experience.get_level_star(self)} \nXP: {self.experience} / {self.max_xp} until {Experience.next_level_star(self)}")
 
-	def print_save_status(self):
-		print(f"Name: {self.name} | Rating: {Experience.get_level_star(self)} | XP: {self.experience}")
-
 	def check_inv(self):
 		if len(self.player_inventory) == 0:
 			print("Your inventory is empty!")
@@ -96,7 +93,7 @@ class Item:
 		self.rating = rating
 		self.quantity = quantity
 	def print_info(self):
-		print(f'{self.name}: {self.description} | Rating: {self.rating} | Amount: {self.quantity}') # print info for player inventory check
+		print(f'{self.name}: {self.description} | Rating: {self.rating}') # print info for player inventory check
 
 class Equipment(Item):
 	equipbox1_inv = []
@@ -116,7 +113,7 @@ class Equipment(Item):
 				equip.print_equip_info()
 
 	def print_equip_info(self):
-		print(f'{self.name}: {self.description} | Rating: {Equipment.equip_quality(self)} | Amount: {self.quantity}')
+		print(f'{self.name}: {self.description} | Rating: {Equipment.equip_quality(self)}')
 
 	def equip_quality(self):
 		if self.rating == 0:
@@ -136,13 +133,15 @@ class Equipment(Item):
 
 class LootBox(Item):
 	loot_inv = []
+	random_loot_inv1 = []
+	random_looteq_inv1 = []
 
 	def __init__(self, name, description, rating, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
 		self.unique_id = unique_id
 		
 	def loot_print_info(self):
-		print(f"{self.name}: {self.description} | Rating: {LootBox.loot_rating(self)} | Amount: {self.quantity}")
+		print(f"{self.name}: {self.description} | Rating: {LootBox.loot_rating(self)}")
 
 	@classmethod
 	def check_loot_inv(cls):
@@ -203,6 +202,6 @@ class Recipe:
 			print("Unrecognised quality")
 
 	def print_info(self):
-		print(f'{self.name}: XP gained from this recipe: {self.exp_value} | Quality: {Recipe.recipe_quality(self)} | Time to cook: {self.timer} | Amount: {self.quantity}')
+		print(f'{self.name}: XP gained from this recipe: {self.exp_value} | Quality: {Recipe.recipe_quality(self)} | Time to cook: {self.timer}')
 
 		

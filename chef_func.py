@@ -11,15 +11,25 @@ import time
 from chef_skeleton import *
 import os
 import pickle
+import importlib
+from inspect import isfunction
 
 def timer(player, recipe, equipment, equip_use_select):
+	double_lootbox_chance = 0.45
 	if equip_use_select == True:
-		if recipe.unique_id != "a106" and equipment.unique_id == "c107":
+		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
 			print("This equipment cannot be used for this recipe!")
 			equip_use_select = False
 			equipment = None
+			return
+		elif equipment.unique_id == "eq001":
+			recipe.exp_value += equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
 		else:
-			recipe.timer = recipe.timer - equipment.effect
+			recipe.timer -= equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
@@ -36,16 +46,22 @@ def timer(player, recipe, equipment, equip_use_select):
 	if recipe.quantity <= 0:
 		player.player_inventory.remove(recipe)
 
+	random_lootbox(recipe)
+	if random.random() < double_lootbox_chance:
+		random_lootbox(recipe)
+	else:
+		pass
+
 def open_lootbox(player):
 
 	def add_to_recipe(loot_random_item):
 		print("\033[33;1mNew recipe gained!!\033[0m")
-		print(loot_random_item)
+		loot_random_item.print_info()
 		player.player_inventory.append(loot_random_item)
 
 	def add_to_equip(loot_random_item):
 		print("\033[33;1mNew item gained!!\033[0m")
-		print(loot_random_item)
+		loot_random_item.print_equip_info()
 		player.player_equip_inv.append(loot_random_item)
 
 	loot_list = LootBox.loot_inv
@@ -58,15 +74,15 @@ def open_lootbox(player):
 				for index, lootbox in enumerate(loot_list, 1):
 					print(index, f"{lootbox.name}")
 				try:
-					select_box = int(input("Select your lootbox: ")) - 1
+					select_box = int(input("Select your lootbox: "))
 				except ValueError:
 					print("Incorrect Selection, please try again")
 					return open_lootbox(player)
-				if lootbox.unique_id == "a201" or lootbox.unique_id == "b201":
+				if lootbox.unique_id == "lb001" or lootbox.unique_id == "lb002":
 					loot_items_list = Recipe.lootbox1_inv
 					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
 					add_to_recipe(loot_random_item)
-				elif lootbox.unique_id == "a202":
+				elif lootbox.unique_id == "lb003":
 					loot_items_list = Equipment.equipbox1_inv
 					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
 					add_to_equip(loot_random_item)
@@ -78,8 +94,6 @@ def open_lootbox(player):
 			pass
 		else:
 			print("Invalid input, Please try again!")
-
-
 
 def player_level_up(player):
 	if player.level == 0:
@@ -146,7 +160,7 @@ def player_level_up(player):
 	elif player.level == 6:
 		if player.experience >= player.max_xp:
 			player.level = 7
-			player.max_xp = 80000
+			player.max_xp = 90000
 			player.next_level = 8
 			print("\033[33;1mYour rating has increased!!\033[0m")	
 			player.print_status()
@@ -155,7 +169,7 @@ def player_level_up(player):
 	elif player.level == 7:
 		if player.experience >= player.max_xp:
 			player.level = 8
-			player.max_xp = 100000
+			player.max_xp = 120000
 			player.next_level = 9
 			print("\033[33;1mYour rating has increased!!\033[0m")	
 			player.print_status()
@@ -164,7 +178,7 @@ def player_level_up(player):
 	elif player.level == 8:
 		if player.experience >= player.max_xp:
 			player.level = 9
-			player.max_xp = 150000
+			player.max_xp = 175000
 			player.next_level = 10
 			print("\033[33;1mYour rating has increased!!\033[0m")	
 			player.print_status()
@@ -177,7 +191,7 @@ def player_level_up(player):
 			player.next_level = "MAX"
 			print("\033[33;1mYour rating has increased!!\033[0m")	
 			player.print_status()
-#			equip4 = Equipment("\033[36;1mMythical Chef's Hat\033[0m", "Boosts cooking speed of all recipes by 35 seconds", 5, 35, 200, "put id here")
+#			equip4 = Equipment("\033[36;1mMythical Chef's Hat\033[0m", "Boosts cooking speed of all recipes by 35 seconds", 5, 35, 9999, "put id here")
 #			Equipment.equip_inv.append(equip4)
 #			equip4.print_equip_info()
 		else:
@@ -186,6 +200,44 @@ def player_level_up(player):
 		player.max_xp = "MAX"
 		player.next_level = "MAX"
 		player.print_status()
+
+def add_to_loot(boxluck, boxluck_eq, lootbox):
+	print("\033[33;1mNew LootBox™ gained!!\033[0m")
+	boxluck[0].loot_print_info()
+	beq = boxluck[0]
+	lootbox.loot_inv.append(beq)
+	if len(boxluck_eq) > 0:
+		print("\033[33;1mNew LootBox™ gained!!\033[0m")
+		boxluck_eq[0].loot_print_info()
+		beq_eq = boxluck_eq[0]
+		lootbox.loot_inv.append(beq_eq)
+
+def random_lootbox(recipe):
+	if recipe.quality <= 1:
+		for lootbox in LootBox.random_loot_inv1:
+			random_box1 = lootbox.random_loot_inv1
+			pass
+	elif recipe.quality == 2:
+		for lootbox in LootBox.random_loot_inv2:
+			random_box2 = lootbox.random_loot_inv2
+			pass
+
+	if recipe.quality >= 0:
+		for loot_eq in LootBox.random_looteq_inv1:
+			random_box_eq1 = loot_eq.random_looteq_inv1
+			pass
+	if recipe.unique_id == "rec001" or recipe.unique_id == "rec002" or recipe.unique_id == "rec003":
+		boxluck = []
+		boxluck1 = random_box1[random.randint(0, len(random_box1) - 1)]
+		boxluck.append(boxluck1)
+		if random.random() < 0.50:
+			boxluck_eq = []
+			boxluck_eq1 = random_box_eq1[random.randint(0, len(random_box_eq1) - 1)]
+			boxluck_eq.append(boxluck_eq1)
+		else:
+			boxluck_eq = []
+	
+	add_to_loot(boxluck, boxluck_eq, lootbox)
 
 def cooking_input(player):
 	recipe_list = player.player_inventory
@@ -205,7 +257,7 @@ def cooking_input(player):
 		print("Incorrect selection, please enter in a correct number within the inventory")
 		return cooking_input(player)
 
-	equip_use_select = str(input("Do you want to use an equipment for this recipe? (Y/N): "))
+	equip_use_select = str(input("Do you want to use an item for this recipe? (Y/N): "))
 
 	if equip_use_select.upper() == "Y":
 		equip_use_select = True
@@ -213,12 +265,12 @@ def cooking_input(player):
 			for index, equip in enumerate(equip_list, 1):
 				print(index, f"{equip.name}")
 			try:
-				equip_select = int(input("Select your equipment: ")) - 1
+				equip_select = int(input("Select your item: ")) - 1
 			except ValueError:
 				print("Incorrect selection, please select an item from the list")
 				return cooking_input(player)
 		elif len(equip_list) <= 0:
-			print("You do not have any equipment to select!")
+			print("You do not have any items to select!")
 			equip_use_select = False
 			equip_select = None
 			equipment = None
@@ -252,7 +304,7 @@ def save_game(player):
 	if os.path.exists(file_name):
 		print("\033[43mSave file in slot 1 already exists!\033[0m")
 
-		save_input = input("Do you want to overwrite save slot 1? (Y/N): ")
+		save_input = input("Do you want to overwrite save slot 1 or save in a different slot? (Y/N): ")
 
 		if save_input.upper() == "Y":
 			with open(file_name, "wb") as file:
@@ -307,9 +359,8 @@ def save_game(player):
 						print("\033[42mGame saved successfully to slot 3\033[0m")	
 
 			elif new_save_input == 2:
-				print("\033[43mGame exited without saving!\033[0m")
-				print("\033[36mThank you for playing!\033[0m")
-				exit()
+				print("\033[43mGame not saved!!\033[0m")
+				pass
 		else:
 			print("Invalid input, please try again!")
 			return save_game(player)
@@ -341,7 +392,7 @@ def load_game(player):
 				recipes = import1[5]
 				equipments = import1[6]
 				lootboxes = import1[7]
-				print(recipes + equipments + lootboxes)
+				print(recipes + equipments + lootboxes) # and remove this after dev
 				player.player_inventory = recipes
 				player.player_equip_inv = equipments
 				LootBox.loot_inv = lootboxes
@@ -354,7 +405,14 @@ def load_game(player):
 		if os.path.exists("chef_2.pkl"):
 			with open("chef_2.pkl", "rb") as file:
 				import2 = pickle.load(file)
-				player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv = import2
+				player.name, player.level, player.experience, player.max_xp, player.next_level = import2[:5]
+				recipes = import1[5]
+				equipments = import1[6]
+				lootboxes = import1[7]
+				print(recipes + equipments + lootboxes) # and remove this after dev
+				player.player_inventory = recipes
+				player.player_equip_inv = equipments
+				LootBox.loot_inv = lootboxes
 				print(import2) # remove this after development
 			print("Save slot 2 loaded successfully!")
 		else:
@@ -364,11 +422,25 @@ def load_game(player):
 		if os.path.exists("chef_3.pkl"):
 			with open("chef_3.pkl", "rb") as file:
 				import3 = pickle.load(file)
-				player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv = import3
+				player.name, player.level, player.experience, player.max_xp, player.next_level = import3[:5]
+				recipes = import1[5]
+				equipments = import1[6]
+				lootboxes = import1[7]
+				print(recipes + equipments + lootboxes) # and remove this after dev
+				player.player_inventory = recipes
+				player.player_equip_inv = equipments
+				LootBox.loot_inv = lootboxes
 				print(import3) # remove this after development
 			print("Save slot 3 loaded successfully!")				
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 4:
-		return # maybe use os.path.exists for this?
+		def call_func(full_module_name, func_name, *argv):
+			module = importlib.import_module(full_module_name)
+			for attribute_name in dir(module):
+				attribute = getattr(moduel, attribute_name)
+				if isfunction(attribute) and attribute_name == func_name:
+					attribute(*argv)
+
+		call_func('chef_main', 'main_menu', None)	
