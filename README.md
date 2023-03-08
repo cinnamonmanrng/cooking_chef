@@ -26,9 +26,19 @@ In order for the game to work, your system needs to have Python 3 installed.
   - Open powershell or Command prompt in administrator mode
   - Write "python3 --version" within the prompt
 ## Issues or enquiries:
-If you have any enquiries, submit them to: cookingchefgame@gmail.com
+If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask within [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
 If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
+## Patch Notes:
+### Build 20
+- Fixed an issue with not being able to return from loading save menu 
+- Added a functional tutorial 
+- Added some QOL improvements 
+- Created a random lootbox mechanic (awards lootboxes after cooking a recipe)
+  - Caused a bug where no matter which lootbox the player selects to open, the game opens item boxes first and then recipe boxes
+- Added a 45% chance to get a 2 lootboxes instead of one 
+- Added the option to skip the tutorial 
+- Created a mechanic that gives out higher quality lootboxes based on recipe quality 
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
