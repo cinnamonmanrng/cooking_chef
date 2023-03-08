@@ -28,7 +28,7 @@ In order for the game to work, your system needs to have Python 3 installed.
 ## Issues or enquiries:
 If you have any enquiries, submit them to: cookingchefgame@gmail.com
 </br>
-If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com
+If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
