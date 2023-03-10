@@ -13,7 +13,7 @@ from chef_skeleton import *
 from chef_func import *
 import keyboard
 
-version_id = "build:20_08/03/23 | Please email: ccg.issues@gmail.com or join our discord for any issues you may encounter, Thank you!"
+version_id = "build:21_10/03/23 | Please email: ccg.issues@gmail.com or join our discord for any issues you may encounter, Thank you!"
 
 # exp mechanic
 # 1 second = 25 xp
@@ -21,18 +21,18 @@ version_id = "build:20_08/03/23 | Please email: ccg.issues@gmail.com or join our
 # initalise recipes
 recipe1 = Recipe("\033[32mSimple boiled potatoes\033[0m", 25 * 6, 0, 6, 1, "rec001")
 recipe2 = Recipe("\033[32mBacon and egg\033[0m", 25 * 5, 0, 5, 1, "rec002")
-recipe3 = Recipe("\033[32;1mMashed potatoes\033[0m", 25 * 10, 1, 10, 1, "rec003")
+recipe3 = Recipe("\033[32mMashed potatoes\033[0m", 25 * 10, 0, 10, 1, "rec003")
 recipe4 = Recipe("\033[32mOvercooked tuna\033[0m", 25 * 5, 0, 5, 1, "rec004")
 
 # initalise equipment
 equip1 = Equipment("\033[32mBeginner's oven glove\033[0m", "Increases the current recipe's XP by 50", 0, 50, 1, "eq001")
 equip2 = Equipment("\033[32mCheap plastic fork\033[0m", "Decreases cooking time of any recipe by 2 seconds", 0, 2, 1, "eq002")
-equip3 = Equipment("\033[32;1mMystery potato flavouring\033[0m", f"Decreases {recipe1.name}'s cooking time by 5 seconds", 1, 5, 1, "eq003")
+equip3 = Equipment("\033[32mMystery potato flavouring\033[0m", f"Decreases {recipe1.name}'s cooking time by 5 seconds", 0, 5, 1, "eq003")
 
 # initalise lootbox
 lootbox1 = LootBox("\033[32mJunior chef's LootBox™\033[0m", "A wonderful start for every chef in Emerald's Restaurants™", 0, 1, "lb001")
 lootbox2 = LootBox("\033[32mFirst edition LootBox™\033[0m", "Like the name describes, quite old and out of date, but will work for now!", 0, 1, "lb002")
-lootbox3 = LootBox("\033[32;1mAspiring chef's helpful LootBox™\033[0m", "A slightly better upgrade from your previous LootBox™ for sure!", 1, 1, "lb003")
+lootbox3 = LootBox("\033[32mAspiring chef's helpful LootBox™\033[0m", "If you need new Items, we've got you covered with this LootBox™!", 0, 1, "lb003")
 
 # adding items to lootbox inventories and lootboxes to player inventory
 Equipment.equipbox1_inv.append(equip1)
@@ -55,6 +55,11 @@ LootBox.random_looteq_inv1.append(lootbox3)
 # 3 - options - anything like delete character, colours and other settings once the pygame application is done will go here
 # 4 - exit game
 
+def progress_bar():
+	for i in range(101):
+		time.sleep(0.05)
+		print(f"\r{i:02d}: {'#'*(i//3)}", end="", flush=True)
+
 def tutorial(player):
 	global tutorial_completed
 	player_level_up(player)
@@ -63,7 +68,7 @@ def tutorial(player):
 		if tutskip.upper() == "Y":
 			tutorial_completed = True
 			LootBox.loot_inv.append(lootbox1)
-			print("\033[36;1mNew LootBox™ Acquired!\033[0m")
+			print("\033[33;1mNew LootBox™ Acquired!\033[0m")
 			lootbox1.loot_print_info()
 			main(player)
 		elif tutskip.upper() == "N":
@@ -84,19 +89,23 @@ def tutorial(player):
 			returninp = None
 			pass
 		LootBox.loot_inv.append(lootbox1)
-		print("\033[36;1mNew LootBox™ Acquired!\033[0m")
+		print("\033[33;1mNew LootBox™ Acquired!\033[0m")
 		lootbox1.loot_print_info()
 		returninp = input()
 		if keyboard.is_pressed('RETURN'):
 			returninp = None
 			pass
 		print("Chef Mike: Now let's get that LootBox™ open for you! I'll show you how now through your personal device.")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
 		print("...Opening  your personal Emerald Tech.™ device, please wait")
-		time.sleep(3)
-		print("\033[41mWELCOME TO YOUR PERSONAL EMERALD TECH™ DEVICE\033[0m")
+		progress_bar()
+		print("\n\033[42mWELCOME TO YOUR PERSONAL EMERALD TECH™ DEVICE\033[0m")
 		print("...Adding LootBox™ to MENU, please wait!")
-		time.sleep(3)
-		print("What would you like to do?")
+		progress_bar()
+		print("\nWhat would you like to do?")
 		print("3 - Open a LootBox™")
 
 		def open_tut_loot(player):
@@ -142,10 +151,15 @@ def tutorial(player):
 			returninp = None
 			pass
 		print("Chef Mike: So, let's get started!")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+		print("... Adding recipe to MENU, please wait!")
+		progress_bar()
+
 		def cook_tut_recipe(player):
-			print("... Adding recipe to MENU, please wait!")
-			time.sleep(3)
-			print("What would you like to do?")
+			print("\nWhat would you like to do?")
 			print("1 - Cook a recipe")
 			try:
 				tut_inp2 = int(input())
@@ -168,8 +182,87 @@ def tutorial(player):
 		if keyboard.is_pressed('RETURN'):
 			returninp = None
 			pass
-		tutorial_completed = True
-		main(player)
+		print("Chef Mike: Now I will teach you how to use items.")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+		print("Chef Mike: Since items will be extremely important once you gain more recognition, let's start with the basics of items")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+		print("Chef Mike: Items can do a huge variety of things to help you cook recipes, they can decrease the time it takes, give you more experience from cooking a recipe and many more things you'll find out later on.")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+		print("Chef Mike: So let's get started, I'll give you an item I found in storage, and a new recipe, otherwise you get them from specalised lootboxes.")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+
+		print("...Adding Items to MENU, please wait!")
+		progress_bar()
+		print("\n\033[33;1mNew Item gained!!\033[0m")
+		player.player_equip_inv.append(equip1)
+		equip1.print_equip_info()
+		print("\033[33;1mNew Recipe gained!!\033[0m")
+		player.player_inventory.append(recipe1)
+		recipe1.print_info()
+
+		def use_item_tutorial(player):
+			print("What would you like to do?")
+			print("1 - Cook a recipe")
+			try:
+				tut_inp3 = int(input())
+			except ValueError:
+				print("Invalid selection, please try again!")
+				return use_item_tutorial(player)
+			if tut_inp3 == 1:
+				cooking_input(player)
+			else:
+				print("Invalid selection, please try again!")
+				return use_item_tutorial(player)
+
+		use_item_tutorial(player)
+
+		print("Chef Mike: Notice how you gained 50 more experience points for cooking this recipe with that item.")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+		print("Chef Mike: Looks like you are ready to start your journey in the kitchen.")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+		print("Chef Mike: Just rememeber what I taught you and you should be fine, Good Luck!")
+		returninp = input()
+		if keyboard.is_pressed('RETURN'):
+			returninp = None
+			pass
+
+		def finish_tutorial():
+			print("1 - Continue to start a new game")
+			print("2 - Replay the tutorial")
+			try:
+				tut_inp4 = int(input("Choose your option: "))
+			except ValueError:
+				print("Invalid selection, please try again!")
+				return finish_tutorial()
+
+			if tut_inp4 == 1:
+				tutorial_completed = True
+				main(player)
+			elif tut_inp4 == 2:
+				tutorial(player, tutorials_skipped)
+			else:
+				print("Invalid selection, please try again!")
+				return finish_tutorial()
+
+		finish_tutorial()
 
 
 
@@ -181,8 +274,9 @@ def main(player):
 		print("1 - Cook a recipe")
 		print("2 - Browse your storage")
 		print("3 - Open a LootBox™")
-		print("4 - Save your game")
-		print("5 - Exit game")
+		print("4 - View your statistics")
+		print("5 - Save your game")
+		print("6 - Exit game")
 		try:
 			gameloop_input = int(input("Which option would you like to continue with?: "))
 		except ValueError:
@@ -214,16 +308,19 @@ def main(player):
 			open_lootbox(player)
 			return main(player)
 		elif gameloop_input == 4:
+			print("Not in use")
+			return main(player)		
+		elif gameloop_input == 5:
 			save_game(player)
 			return main(player)
-		elif gameloop_input == 5:
+		elif gameloop_input == 6:
 			print("\033[36mThank you for playing!\033[0m")
 			exit()
 
 def main_menu():
 	global tutorial_completed
 	print("\033[42;15mWelcome to Cooking Chef!\033[0m")
-	print("\033[44mYou are playing on\033[0m: " + version_id)
+	print("\033[44mYou are playing on:\033[0m " + version_id)
 	print("What would you like to do?")
 	print("\nSelect your option:")
 	print("1 - Start a new game")

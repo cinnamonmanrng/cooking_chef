@@ -12,7 +12,7 @@ class Player:
 		self.next_level = next_level
 
 	def print_status(self):
-		print(f"Name: {self.name} \nRating: {Experience.get_level_star(self)} \nXP: {self.experience} / {self.max_xp} until {Experience.next_level_star(self)}")
+		print(f"\033[33;1mName:\033[0m {self.name} \n\033[33;1mRating:\033[0m {Experience.get_level_star(self)} \n\033[33;1mXP:\033[0m {self.experience} / {self.max_xp} \033[33;1muntil\033[0m {Experience.next_level_star(self)}")
 
 	def check_inv(self):
 		if len(self.player_inventory) == 0:
@@ -28,6 +28,32 @@ class Player:
 			for equip in self.player_equip_inv:
 				equip.print_equip_info()
 
+	def get_load_star(self):
+		if self.level == 0:
+			return "○"
+		elif self.level == 1:
+			return "☆"
+		elif self.level == 2:
+			return "☆☆"
+		elif self.level == 3:
+			return "☆☆☆"
+		elif self.level == 4:
+			return "☆☆☆☆"
+		elif self.level == 5:
+			return "☆☆☆☆☆"
+		elif self.level == 6:
+			return "★☆☆☆☆"
+		elif self.level == 7:
+			return "★★☆☆☆"
+		elif self.level == 8:
+			return "★★★☆☆"
+		elif self.level == 9:
+			return "★★★★☆"
+		elif self.level == 10:
+			return "★★★★★"
+		else: 
+			return "Invalid Level"
+
 class Experience(Player):
 	def __init__(self, experience, next_level, level):
 		super().__init__(experience, next_level, level)
@@ -35,7 +61,7 @@ class Experience(Player):
 
 	def get_level_star(self):
 		if self.level == 0:
-			return "Unrecognised"
+			return "○"
 		elif self.level == 1:
 			return "☆"
 		elif self.level == 2:

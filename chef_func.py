@@ -14,14 +14,14 @@ import pickle
 import importlib
 from inspect import isfunction
 
-def timer(player, recipe, equipment, equip_use_select):
+def timer(player, recipe, equipment, equip_use_select, recipes_cooked, items_used):
 	double_lootbox_chance = 0.45
 	if equip_use_select == True:
 		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
-			print("This equipment cannot be used for this recipe!")
+			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
-			return
+			return equip_use_select, equipment
 		elif equipment.unique_id == "eq001":
 			recipe.exp_value += equipment.effect
 			print(f"{equipment.name} Has been used!")
@@ -34,6 +34,15 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
+	elif equip_use_select == False:
+		if recipe.unique_id == "rec001":
+			recipe.timer = 6
+		elif recipe.unique_id == "rec002":
+			recipe.timer = 5
+		elif recipe.unique_id == "rec003":
+			recipe.timer = 10
+		elif recipe.unique_id == "rec004":
+			recipe.timer = 5
 
 	if recipe.timer < 0:
 		recipe.timer = 0
@@ -41,6 +50,7 @@ def timer(player, recipe, equipment, equip_use_select):
 	print(recipe.name, "Has started cooking:", recipe.timer)		
 	time.sleep(recipe.timer)
 	print(recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
+	player.experience += recipe.exp_value
 	recipe.quantity -= 1
 
 	if recipe.quantity <= 0:
@@ -75,6 +85,7 @@ def open_lootbox(player):
 					print(index, f"{lootbox.name}")
 				try:
 					select_box = int(input("Select your lootbox: "))
+					lootbox = loot_list[select_box-1]
 				except ValueError:
 					print("Incorrect Selection, please try again")
 					return open_lootbox(player)
@@ -226,7 +237,8 @@ def random_lootbox(recipe):
 		for loot_eq in LootBox.random_looteq_inv1:
 			random_box_eq1 = loot_eq.random_looteq_inv1
 			pass
-	if recipe.unique_id == "rec001" or recipe.unique_id == "rec002" or recipe.unique_id == "rec003":
+
+	if recipe.unique_id == "rec001" or recipe.unique_id == "rec002" or recipe.unique_id == "rec003" or recipe.unique_id == "rec004":
 		boxluck = []
 		boxluck1 = random_box1[random.randint(0, len(random_box1) - 1)]
 		boxluck.append(boxluck1)
@@ -293,7 +305,6 @@ def cooking_input(player):
 			recipe = None
 			return cooking_input(player)
 		timer(player, recipe, equipment, equip_use_select)
-		player.experience += recipe.exp_value
 		player_level_up(player)
 
 def save_game(player):
@@ -304,13 +315,16 @@ def save_game(player):
 	if os.path.exists(file_name):
 		print("\033[43mSave file in slot 1 already exists!\033[0m")
 
-		save_input = input("Do you want to overwrite save slot 1 or save in a different slot? (Y/N): ")
+		print("1 - Overwrite Slot 1")
+		print("2 - Save in a different slot")
+		save_input = int(input("Do you want to overwrite save slot 1 or save in a different slot?: "))
 
-		if save_input.upper() == "Y":
+
+		if save_input == 1:
 			with open(file_name, "wb") as file:
 				pickle.dump(chef, file)				
 				print("\033[42mFile saved successfully to slot 1\033[0m")
-		elif save_input.upper() == "N":
+		elif save_input == 2:
 			print("1. Save Slot 2")
 			print("2. Save Slot 3")
 			print("3. Leave without saving")
@@ -370,18 +384,54 @@ def save_game(player):
 		if ask_to_save.upper() == "Y":
 			with open(file_name, "wb") as file:
 				pickle.dump(chef, file)
-				print("File saved successfully to slot 1")
+				print("\033[42mFile saved successfully to slot 1\033[0m")
 		elif ask_to_save.upper() == "N":
 			print("\033[43mPlayer data not saved!\033[0m")
 			pass
+def call_func(full_module_name, func_name, *argv):
+	module = importlib.import_module(full_module_name)
+	for attribute_name in dir(module):
+		attribute = getattr(moduel, attribute_name)
+		if isfunction(attribute) and attribute_name == func_name:
+			attribute(*argv)
 
 def load_game(player):
-	print("1 - Save Slot 1")
-	print("2 - Save Slot 2")
-	print("3 - Save Slot 3")
-	print("4 - Go back") # list names and rating
+	if not os.path.exists("chef_1.pkl"):
+		print("1 - Save Slot 1 - Empty")
+
+	if os.path.exists("chef_1.pkl"):
+		with open("chef_1.pkl", "rb") as menufile:
+			load1 = pickle.load(menufile)
+			load1_list = list(load1)
+			player.name, player.level, player.experience = load1[:3]
+			print("1 - Save Slot 1 - " + f"{player.name} " + f"| Rating: {player.get_load_star()} " + "| XP: " + f"{player.experience}")
+			menufile.close()
+
+	if not os.path.exists("chef_2.pkl"):
+		print("2 - Save Slot 2 - Empty")
+
+	if os.path.exists("chef_2.pkl"):
+		with open("chef_2.pkl", "rb") as menufile:
+			load2 = pickle.load(menufile)
+			load2_list = list(load2)
+			player.name, player.level, player.experience = load2[:3]
+			print("2 - Save Slot 2 - " + f"{player.name} " + "| XP: " + f"{player.experience}")
+			menufile.close()
+
+	if not os.path.exists("chef_3.pkl"):
+		print("3 - Save Slot 3 - Empty")
+
+	if os.path.exists("chef_3.pkl"):
+		with open("chef_3.pkl", "rb") as menufile:
+			load3 = pickle.load(menufile)
+			load3_list = list(load3)
+			player.name, player.level, player.experience = load3[:3]
+			print("3 - Save Slot 3 - " + f"{player.name} " + "| XP: " + f"{player.experience}")
+			menufile.close()
+
+	print("4 - Go back")
 	print("5 - Delete a save file")
-	ask_save_load = int(input("Which save slot do you want to open?: "))
+	ask_save_load = int(input("Choose your option: "))
 
 	if ask_save_load == 1:
 		if os.path.exists("chef_1.pkl"):
@@ -392,11 +442,9 @@ def load_game(player):
 				recipes = import1[5]
 				equipments = import1[6]
 				lootboxes = import1[7]
-				print(recipes + equipments + lootboxes) # and remove this after dev
 				player.player_inventory = recipes
 				player.player_equip_inv = equipments
 				LootBox.loot_inv = lootboxes
-				print(import1) # remove this after development
 			print("Save slot 1 loaded successfully!")
 		else:
 			print("Save slot is empty, please try again!")
@@ -405,15 +453,14 @@ def load_game(player):
 		if os.path.exists("chef_2.pkl"):
 			with open("chef_2.pkl", "rb") as file:
 				import2 = pickle.load(file)
+				import2_list = list(import2)
 				player.name, player.level, player.experience, player.max_xp, player.next_level = import2[:5]
-				recipes = import1[5]
-				equipments = import1[6]
-				lootboxes = import1[7]
-				print(recipes + equipments + lootboxes) # and remove this after dev
+				recipes = import2[5]
+				equipments = import2[6]
+				lootboxes = import2[7]
 				player.player_inventory = recipes
 				player.player_equip_inv = equipments
 				LootBox.loot_inv = lootboxes
-				print(import2) # remove this after development
 			print("Save slot 2 loaded successfully!")
 		else:
 			print("Save slot is empty, please try again!")
@@ -422,25 +469,50 @@ def load_game(player):
 		if os.path.exists("chef_3.pkl"):
 			with open("chef_3.pkl", "rb") as file:
 				import3 = pickle.load(file)
+				import3_list = list(import3)
 				player.name, player.level, player.experience, player.max_xp, player.next_level = import3[:5]
-				recipes = import1[5]
-				equipments = import1[6]
-				lootboxes = import1[7]
-				print(recipes + equipments + lootboxes) # and remove this after dev
+				recipes = import3[5]
+				equipments = import3[6]
+				lootboxes = import3[7]
 				player.player_inventory = recipes
 				player.player_equip_inv = equipments
 				LootBox.loot_inv = lootboxes
-				print(import3) # remove this after development
 			print("Save slot 3 loaded successfully!")				
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 4:
-		def call_func(full_module_name, func_name, *argv):
-			module = importlib.import_module(full_module_name)
-			for attribute_name in dir(module):
-				attribute = getattr(moduel, attribute_name)
-				if isfunction(attribute) and attribute_name == func_name:
-					attribute(*argv)
+		call_func('chef_main', 'main_menu', None)
+	elif ask_save_load == 5:
+		print("1 - Remove save in slot 1")
+		print("2 - Remove save in slot 2")
+		print("3 - Remove save in slot 3")
+		print("4 - Go back")
+		delete_save_inp = int(input("Choose your option: "))
 
-		call_func('chef_main', 'main_menu', None)	
+		if delete_save_inp == 1:
+			if os.path.exists("chef_1.pkl"):
+				os.remove("chef_1.pkl")
+				print("\033[43mSave file in slot 1 has been removed successfully!\033[0m")
+				return load_game(player)
+			elif not os.path.exists("chef_1.pkl"):
+				print("\033[43mSave slot 1 is empty!")
+				return load_game(player)
+		elif delete_save_inp == 2:
+			if os.path.exists("chef_2.pkl"):
+				os.remove("chef_2.pkl")
+				print("\033[43mSave file in slot 2 has been removed successfully!\033[0m")
+				return load_game(player)
+			elif not os.path.exists("chef_2.pkl"):
+				print("\033[43mSave slot 2 is empty!")
+				return load_game(player)
+		elif delete_save_inp == 3:
+			if os.path.exists("chef_3.pkl"):
+				os.remove("chef_3.pkl")
+				print("\033[43mSave file in slot 3 has been removed successfully!\033[0m")
+				return load_game(player)
+			elif not os.path.exists("chef_3.pkl"):
+				print("\033[43mSave slot 3 is empty!")
+				return load_game(player)
+		elif delete_save_inp == 4:
+			return load_game(player)
