@@ -31,6 +31,8 @@ If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask with
 If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
 ## Patch Notes:
+### Build 21.1
+- Fixed a gamebreaking issue with the timer mechanic
 ### Build 21
 - Fixed a bug where you would still get XP from a recipe when you used an incorrect item for said recipe 
 - Fixed a bug that caused item decreases to recipe time to be permanent 
