@@ -31,6 +31,16 @@ If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask with
 If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
 ## Patch Notes:
+### Build 21
+- Fixed a bug where you would still get XP from a recipe when you used an incorrect item for said recipe 
+- Fixed a bug that caused item decreases to recipe time to be permanent 
+- Fixed an issue where loot boxes would open with item boxes first and then recipe boxes regardless of player selection 
+- Added a feature that lists player name and experience points in the load game menu 
+- Changed tutorial mechanics and expanded the tutorial 
+- Added some design features to the tutorial 
+- Added the option to delete a save file 
+- Added a feature that shows player rating in Load Game 
+- Changed rating 0 design 
 ### Build 20
 - Fixed an issue with not being able to return from loading save menu 
 - Added a functional tutorial 
