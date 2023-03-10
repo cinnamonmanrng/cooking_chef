@@ -34,15 +34,6 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
-	elif equip_use_select == False:
-		if recipe.unique_id == "rec001":
-			recipe.timer = 6
-		elif recipe.unique_id == "rec002":
-			recipe.timer = 5
-		elif recipe.unique_id == "rec003":
-			recipe.timer = 10
-		elif recipe.unique_id == "rec004":
-			recipe.timer = 5
 
 	if recipe.timer < 0:
 		recipe.timer = 0
@@ -53,6 +44,8 @@ def timer(player, recipe, equipment, equip_use_select):
 	player.experience += recipe.exp_value
 	recipe.quantity -= 1
 
+	equip_use_select = False
+
 	if recipe.quantity <= 0:
 		player.player_inventory.remove(recipe)
 
@@ -61,6 +54,19 @@ def timer(player, recipe, equipment, equip_use_select):
 		random_lootbox(recipe)
 	else:
 		pass
+
+	if recipe.unique_id == "rec001":
+		recipe.timer = 6
+		recipe.exp_value = 25 * 6
+	if recipe.unique_id == "rec002":
+		recipe.timer = 5
+		recipe.exp_value = 25 * 5
+	if recipe.unique_id == "rec003":
+		recipe.timer = 10
+		recipe.exp_value = 25 * 10
+	if recipe.unique_id == "rec004":
+		recipe.timer = 5
+		recipe.exp_value = 25 * 5
 
 def open_lootbox(player):
 
