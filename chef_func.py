@@ -14,7 +14,7 @@ import pickle
 import importlib
 from inspect import isfunction
 
-def timer(player, recipe, equipment, equip_use_select, recipes_cooked, items_used):
+def timer(player, recipe, equipment, equip_use_select):
 	double_lootbox_chance = 0.45
 	if equip_use_select == True:
 		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
