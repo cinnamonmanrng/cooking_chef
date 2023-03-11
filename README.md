@@ -1,9 +1,9 @@
 # Cooking Chef
 
 ## Minimum Requirements:
-OS: Windows 8 or later / MacOS: TBA
+OS: Windows 8 or later / MacOS: 12.2 Monterey or later
 </br>
-Python: Python 3.10 or later 
+Python: Python 3.8 or later 
 </br>
 No other requirements
 </br>
@@ -30,7 +30,10 @@ If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask with
 </br>
 If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
-## Patch Notes:
+## Version History:
+### Build 1.1 MacOS
+- Created a version for MacOS
+  - Tutorial cannot be played as keyboard module does not work properly within MacOS as of yet
 ### Build 21.3
 - Fixed a ValueError caused by not selecting an option within the browsing storage option
 - Decreased double lootbox chance to 25%
