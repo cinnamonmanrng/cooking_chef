@@ -11,9 +11,9 @@
 import time
 from chef_skeleton import *
 from chef_func import *
-import keyboard
+# import keyboard
 
-version_id = "build:21.3_10/03/23 | Please email: ccg.issues@gmail.com or join our discord for any issues you may encounter, Thank you!"
+version_id = "build:1.1/MACOS_11/03/23 | Please email: ccg.issues@gmail.com or join our discord for any issues you may encounter, Thank you!"
 
 # exp mechanic
 # 1 second = 25 xp
@@ -73,7 +73,8 @@ def tutorial(player):
 	global tutorial_completed
 	player_level_up(player)
 	if tutorial_completed == False:
-		tutskip = input("Would you like to skip the tutorial? (Y/N): ")
+		tutskip = print("\033[43mTutorial skipped due to game error!\033[0m")
+		tutskip = "Y"
 		if tutskip.upper() == "Y":
 			tutorial_completed = True
 			LootBox.loot_inv.append(lootbox1)

@@ -123,7 +123,7 @@ class Item:
 
 class Equipment(Item):
 	equipbox1_inv = []
-	# equipbox2_inv = []
+	equipbox2_inv = []
 
 	def __init__(self, name, description, rating, effect, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -161,6 +161,7 @@ class LootBox(Item):
 	loot_inv = []
 	random_loot_inv1 = []
 	random_looteq_inv1 = []
+	random_looteq_inv2 = []
 
 	def __init__(self, name, description, rating, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
