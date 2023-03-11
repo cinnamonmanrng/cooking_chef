@@ -1,4 +1,4 @@
-# cooking_chef
+# Cooking Chef
 
 ## Minimum Requirements:
 OS: Windows 8 or later / MacOS: TBA
@@ -31,6 +31,10 @@ If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask with
 If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
 ## Patch Notes:
+### Build 21.3
+- Fixed a ValueError caused by not selecting an option within the browsing storage option
+- Decreased double lootbox chance to 25%
+- Added a new lootbox with new items and recipes
 ### Build 21.2
 - Fixed a problem with timer permanently saving decreases in cooking times and increases in xp value
 ### Build 21.1
