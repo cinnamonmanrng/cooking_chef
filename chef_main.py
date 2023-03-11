@@ -13,7 +13,7 @@ from chef_skeleton import *
 from chef_func import *
 import keyboard
 
-version_id = "build:21_10/03/23 | Please email: ccg.issues@gmail.com or join our discord for any issues you may encounter, Thank you!"
+version_id = "build:21.3_10/03/23 | Please email: ccg.issues@gmail.com or join our discord for any issues you may encounter, Thank you!"
 
 # exp mechanic
 # 1 second = 25 xp
@@ -23,30 +23,39 @@ recipe1 = Recipe("\033[32mSimple boiled potatoes\033[0m", 25 * 6, 0, 6, 1, "rec0
 recipe2 = Recipe("\033[32mBacon and egg\033[0m", 25 * 5, 0, 5, 1, "rec002")
 recipe3 = Recipe("\033[32mMashed potatoes\033[0m", 25 * 10, 0, 10, 1, "rec003")
 recipe4 = Recipe("\033[32mOvercooked tuna\033[0m", 25 * 5, 0, 5, 1, "rec004")
+recipe5 = Recipe("\033[32;1mSimple boiled spaghetti\033[0m", 25 * 12, 1, 12, 1, "rec005")
 
 # initalise equipment
 equip1 = Equipment("\033[32mBeginner's oven glove\033[0m", "Increases the current recipe's XP by 50", 0, 50, 1, "eq001")
 equip2 = Equipment("\033[32mCheap plastic fork\033[0m", "Decreases cooking time of any recipe by 2 seconds", 0, 2, 1, "eq002")
 equip3 = Equipment("\033[32mMystery potato flavouring\033[0m", f"Decreases {recipe1.name}'s cooking time by 5 seconds", 0, 5, 1, "eq003")
+equip4 = Equipment("\033[32;1mRegular plastic fork\033[0m", "Decreases cooking time of any recipe by 4 seconds", 1, 4, 1, "eq004")
+equip5 = Equipment("\033[32;1mStarter chef's handy whisk", "Increases the current recipe's XP by 100", 1, 100, 1, "eq005")
 
 # initalise lootbox
 lootbox1 = LootBox("\033[32mJunior chef's LootBox™\033[0m", "A wonderful start for every chef in Emerald's Restaurants™", 0, 1, "lb001")
 lootbox2 = LootBox("\033[32mFirst edition LootBox™\033[0m", "Like the name describes, quite old and out of date, but will work for now!", 0, 1, "lb002")
 lootbox3 = LootBox("\033[32mAspiring chef's helpful LootBox™\033[0m", "If you need new Items, we've got you covered with this LootBox™!", 0, 1, "lb003")
+lootbox4 = LootBox("\033[32;1mOutdated helpful LootBox™\033[0m", "Better Items can be found here!", 1, 1, "lb004")
 
 # adding items to lootbox inventories and lootboxes to player inventory
 Equipment.equipbox1_inv.append(equip1)
 Equipment.equipbox1_inv.append(equip2)
 Equipment.equipbox1_inv.append(equip3)
+Equipment.equipbox2_inv.append(equip2)
+Equipment.equipbox2_inv.append(equip4)
+Equipment.equipbox2_inv.append(equip5)
 
 Recipe.lootbox1_inv.append(recipe1)
 Recipe.lootbox1_inv.append(recipe2)
 Recipe.lootbox1_inv.append(recipe3)
 Recipe.lootbox1_inv.append(recipe4)
+Recipe.lootbox1_inv.append(recipe5)
 
 LootBox.random_loot_inv1.append(lootbox1)
 LootBox.random_loot_inv1.append(lootbox2)
 LootBox.random_looteq_inv1.append(lootbox3)
+LootBox.random_looteq_inv2.append(lootbox4)
 
 # gameloop plan:
 # initalise menu:
@@ -291,7 +300,10 @@ def main(player):
 			print("2 - Item Storage")
 			print("3 - LootBox™ Storage")
 			print("4 - Go back")
-			check_inv_input = int(input("What would you like to check?: "))
+			try:
+				check_inv_input = int(input("What would you like to check?: "))
+			except ValueError:
+				print("\033[43mInvalid Selection, PLease try again!\033[0m")
 
 			if check_inv_input == 1:
 				player.check_inv()
@@ -316,6 +328,8 @@ def main(player):
 		elif gameloop_input == 6:
 			print("\033[36mThank you for playing!\033[0m")
 			exit()
+		else:
+			print("\033[43mInvalid selection, please try again!\033[0m")
 
 def main_menu():
 	global tutorial_completed

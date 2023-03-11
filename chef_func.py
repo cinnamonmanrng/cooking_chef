@@ -15,14 +15,14 @@ import importlib
 from inspect import isfunction
 
 def timer(player, recipe, equipment, equip_use_select):
-	double_lootbox_chance = 0.45
+	double_lootbox_chance = 0.25
 	if equip_use_select == True:
 		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
 			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
 			return equip_use_select, equipment
-		elif equipment.unique_id == "eq001":
+		elif equipment.unique_id == "eq001" or equipment.unique_id == "eq005":
 			recipe.exp_value += equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
@@ -49,9 +49,9 @@ def timer(player, recipe, equipment, equip_use_select):
 	if recipe.quantity <= 0:
 		player.player_inventory.remove(recipe)
 
-	random_lootbox(recipe)
+	random_lootbox(recipe, player)
 	if random.random() < double_lootbox_chance:
-		random_lootbox(recipe)
+		random_lootbox(recipe, player)
 	else:
 		pass
 
@@ -67,6 +67,9 @@ def timer(player, recipe, equipment, equip_use_select):
 	if recipe.unique_id == "rec004":
 		recipe.timer = 5
 		recipe.exp_value = 25 * 5
+	if recipe.unique_id == "rec005":
+		recipe.timer = 12
+		recipe.exp_value = 25 * 12
 
 def open_lootbox(player):
 
@@ -103,6 +106,10 @@ def open_lootbox(player):
 					loot_items_list = Equipment.equipbox1_inv
 					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
 					add_to_equip(loot_random_item)
+				elif lootbox.unique_id == "lb004":
+					loot_items_list = Equipment.equipbox2_inv
+					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
+					add_to_equip(loot_random_item)					
 				lootbox.quantity -= 1
 				if lootbox.quantity <= 0:
 					lootbox.loot_inv.remove(lootbox)
@@ -229,19 +236,24 @@ def add_to_loot(boxluck, boxluck_eq, lootbox):
 		beq_eq = boxluck_eq[0]
 		lootbox.loot_inv.append(beq_eq)
 
-def random_lootbox(recipe):
-	if recipe.quality <= 1:
+def random_lootbox(recipe, player):
+	if recipe.quality == 0:
+		for lootbox in LootBox.random_loot_inv1:
+			random_box1 = lootbox.random_loot_inv1
+			pass
+		for loot_eq in LootBox.random_looteq_inv1:
+			random_box_eq1 = loot_eq.random_looteq_inv1
+			pass
+	elif recipe.quality == 1:
+		for loot_eq in LootBox.random_looteq_inv2:
+			random_box_eq2 = loot_eq.random_looteq_inv2
+			pass
 		for lootbox in LootBox.random_loot_inv1:
 			random_box1 = lootbox.random_loot_inv1
 			pass
 	elif recipe.quality == 2:
 		for lootbox in LootBox.random_loot_inv2:
 			random_box2 = lootbox.random_loot_inv2
-			pass
-
-	if recipe.quality >= 0:
-		for loot_eq in LootBox.random_looteq_inv1:
-			random_box_eq1 = loot_eq.random_looteq_inv1
 			pass
 
 	if recipe.unique_id == "rec001" or recipe.unique_id == "rec002" or recipe.unique_id == "rec003" or recipe.unique_id == "rec004":
@@ -254,6 +266,17 @@ def random_lootbox(recipe):
 			boxluck_eq.append(boxluck_eq1)
 		else:
 			boxluck_eq = []
+	elif recipe.unique_id == "rec005":
+		boxluck = []
+		boxluck1 = random_box1[random.randint(0, len(random_box1) - 1)]
+		boxluck.append(boxluck1)
+		if random.random() < 0.50:
+			boxluck_eq = []
+			boxluck_eq2 = random_box_eq2[random.randint(0, len(random_box_eq2) - 1)]
+			boxluck_eq.append(boxluck_eq2)
+		else:
+			boxluck_eq = []
+
 	
 	add_to_loot(boxluck, boxluck_eq, lootbox)
 
