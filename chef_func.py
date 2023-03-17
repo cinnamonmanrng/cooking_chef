@@ -7,6 +7,7 @@
 # epic: \033[35m
 # legendary: \033[31;1m
 # mythic/unique: \033[36;1m
+
 import time
 from chef_skeleton import *
 import os
@@ -17,18 +18,53 @@ from inspect import isfunction
 def timer(player, recipe, equipment, equip_use_select):
 	double_lootbox_chance = 0.25
 	if equip_use_select == True:
-		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
+
+		if recipe.unique_id != "rec001" or recipe.unique_id != "rec003" and equipment.unique_id == "eq003":
 			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
 			return equip_use_select, equipment
+
+		elif recipe.unique_id != "rec006" and equipment.unique_id == "eq006":
+			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		elif recipe.unique_id != "rec011" and equipment.unique_id == "eq007":
+			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		elif recipe.unique_id != "rec009" and equipment.unique_id == "eq008":
+			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		elif recipe.unique_id == "rec009" and equipment.unique_id == "eq008":
+			recipe.exp_value += equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+
 		elif equipment.unique_id == "eq001" or equipment.unique_id == "eq005":
 			recipe.exp_value += equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
-		else:
+
+		elif equipment.unique_id == "eq010":
+			recipe.quantity += equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+
+		else: 
 			recipe.timer -= equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
@@ -55,33 +91,45 @@ def timer(player, recipe, equipment, equip_use_select):
 	else:
 		pass
 
-	if recipe.unique_id == "rec001":
-		recipe.timer = 6
-		recipe.exp_value = 25 * 6
-	if recipe.unique_id == "rec002":
-		recipe.timer = 5
-		recipe.exp_value = 25 * 5
-	if recipe.unique_id == "rec003":
-		recipe.timer = 10
-		recipe.exp_value = 25 * 10
-	if recipe.unique_id == "rec004":
-		recipe.timer = 5
-		recipe.exp_value = 25 * 5
-	if recipe.unique_id == "rec005":
-		recipe.timer = 12
-		recipe.exp_value = 25 * 12
+	unique_id = recipe.unique_id
+
+	def get_recipe(unique_id):
+		recipe_id_dict = {
+			"rec001": {"timer": 6, "exp_value": 25*6},
+			"rec002": {"timer": 5, "exp_value": 25*5},
+			"rec003": {"timer": 10, "exp_value": 25*10},
+			"rec004": {"timer": 5, "exp_value": 25*5},
+			"rec005": {"timer": 12, "exp_value": 25*12},
+			"rec006": {"timer": 14, "exp_value": 25*14},
+			"rec007": {"timer": 10, "exp_value": 25*10},
+			"rec008": {"timer": 18, "exp_value": 25*18},
+			"rec009": {"timer": 15, "exp_value": 25*15},
+			"rec010": {"timer": 14, "exp_value": 25*14},
+			"rec011": {"timer": 20, "exp_value": 25*20},
+			"rec012": {"timer": 19, "exp_value": 25*19}
+		}
+
+		if unique_id in recipe_id_dict:
+			return recipe_id_dict[unique_id]
+		else:
+			return None
+
+	recipe_check = get_recipe(unique_id)
+	if recipe_check is not None:
+		recipe.timer = recipe_check["timer"]
+		recipe.exp_value = recipe_check["exp_value"]
 
 def open_lootbox(player):
 
-	def add_to_recipe(loot_random_item):
+	def add_to_recipe(loot_item):
 		print("\033[33;1mNew recipe gained!!\033[0m")
-		loot_random_item.print_info()
-		player.player_inventory.append(loot_random_item)
+		loot_item.print_info()
+		player.player_inventory.append(loot_item)
 
-	def add_to_equip(loot_random_item):
+	def add_to_equip(loot_item):
 		print("\033[33;1mNew item gained!!\033[0m")
-		loot_random_item.print_equip_info()
-		player.player_equip_inv.append(loot_random_item)
+		loot_item.print_equip_info()
+		player.player_equip_inv.append(loot_item)
 
 	loot_list = LootBox.loot_inv
 
@@ -98,18 +146,27 @@ def open_lootbox(player):
 				except ValueError:
 					print("Incorrect Selection, please try again")
 					return open_lootbox(player)
-				if lootbox.unique_id == "lb001" or lootbox.unique_id == "lb002":
-					loot_items_list = Recipe.lootbox1_inv
-					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-					add_to_recipe(loot_random_item)
-				elif lootbox.unique_id == "lb003":
-					loot_items_list = Equipment.equipbox1_inv
-					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-					add_to_equip(loot_random_item)
-				elif lootbox.unique_id == "lb004":
-					loot_items_list = Equipment.equipbox2_inv
-					loot_random_item = loot_items_list[random.randint(0, len(loot_items_list) - 1)]
-					add_to_equip(loot_random_item)					
+
+				lootbox_dict = {
+					"lb001": (Recipe.lootbox1_inv),
+					"lb002": (Recipe.lootbox1_inv),
+					"lb003": (Equipment.equipbox1_inv),
+					"lb004": (Equipment.equipbox2_inv),
+					"lb005": (Recipe.lootbox2_inv),
+					"lb006": (Recipe.lootbox3_inv)
+				}
+				loot_random_item = lootbox_dict.get(lootbox.unique_id, (None))
+
+				if loot_random_item is None:
+					return
+
+				loot_item = loot_random_item[random.randint(0, len(loot_random_item) - 1)]
+
+				if lootbox.unique_id == "lb001" or lootbox.unique_id == "lb002" or lootbox.unique_id == "lb005" or lootbox.unique_id == "lb006":
+					add_to_recipe(loot_item)
+				elif lootbox.unique_id == "lb003" or lootbox.unique_id == "lb004":
+					add_to_equip(loot_item)
+
 				lootbox.quantity -= 1
 				if lootbox.quantity <= 0:
 					lootbox.loot_inv.remove(lootbox)
@@ -128,7 +185,7 @@ def player_level_up(player):
 			player.level = 1
 			player.max_xp = 2500
 			player.next_level = 2
-			print("\033[33;1mYour rating has increased!!\033[0m") 
+			print("\033[45;1mYour rating has increased!!\033[0m") 
 			player.print_status()
 		else:
 			player.print_status()
@@ -138,7 +195,7 @@ def player_level_up(player):
 			player.level = 2
 			player.max_xp = 5000
 			player.next_level = 3
-			print("\033[33;1mYour rating has increased!!\033[0m") 
+			print("\033[45;1mYour rating has increased!!\033[0m") 
 			player.print_status()
 		else:
 			player.print_status()
@@ -148,7 +205,7 @@ def player_level_up(player):
 			player.level = 3
 			player.max_xp = 10000
 			player.next_level = 4
-			print("\033[33;1mYour rating has increased!!\033[0m") 
+			print("\033[45;1mYour rating has increased!!\033[0m") 
 			player.print_status()
 		else:
 			player.print_status()
@@ -158,7 +215,7 @@ def player_level_up(player):
 			player.level = 4
 			player.max_xp = 20000
 			player.next_level = 5
-			print("\033[33;1mYour rating has increased!!\033[0m") 
+			print("\033[45;1mYour rating has increased!!\033[0m") 
 			player.print_status()
 		else:
 			player.print_status()
@@ -168,7 +225,7 @@ def player_level_up(player):
 			player.level = 5
 			player.max_xp = 40000
 			player.next_level = 6
-			print("\033[33;1mYour rating has increased!!\033[0m") 
+			print("\033[45;1mYour rating has increased!!\033[0m")
 			player.print_status()
 		else:
 			player.print_status()
@@ -177,7 +234,7 @@ def player_level_up(player):
 			player.level = 6
 			player.max_xp = 60000
 			player.next_level = 7
-			print("\033[33;1mYour rating has increased!!\033[0m")	
+			print("\033[45;1mYour rating has increased!!\033[0m")	
 			player.print_status()
 		else:
 			player.print_status()
@@ -186,7 +243,7 @@ def player_level_up(player):
 			player.level = 7
 			player.max_xp = 90000
 			player.next_level = 8
-			print("\033[33;1mYour rating has increased!!\033[0m")	
+			print("\033[45;1mYour rating has increased!!\033[0m")	
 			player.print_status()
 		else:
 			player.print_status()
@@ -195,7 +252,7 @@ def player_level_up(player):
 			player.level = 8
 			player.max_xp = 120000
 			player.next_level = 9
-			print("\033[33;1mYour rating has increased!!\033[0m")	
+			print("\033[45;1mYour rating has increased!!\033[0m")	
 			player.print_status()
 		else:
 			player.print_status()
@@ -204,7 +261,7 @@ def player_level_up(player):
 			player.level = 9
 			player.max_xp = 175000
 			player.next_level = 10
-			print("\033[33;1mYour rating has increased!!\033[0m")	
+			print("\033[45;1mYour rating has increased!!\033[0m")	
 			player.print_status()
 		else:
 			player.print_status()
@@ -213,72 +270,62 @@ def player_level_up(player):
 			player.level = 10
 			player.max_xp = "MAX"
 			player.next_level = "MAX"
-			print("\033[33;1mYour rating has increased!!\033[0m")	
+			print("\033[45;1mYour rating has increased!!\033[0m")	
 			player.print_status()
-#			equip4 = Equipment("\033[36;1mMythical Chef's Hat\033[0m", "Boosts cooking speed of all recipes by 35 seconds", 5, 35, 9999, "put id here")
-#			Equipment.equip_inv.append(equip4)
-#			equip4.print_equip_info()
 		else:
 			player.print_status()
 	elif player.level == 10:
 		player.max_xp = "MAX"
 		player.next_level = "MAX"
-		player.print_status()
+		player.print_status_maxlvl()
 
-def add_to_loot(boxluck, boxluck_eq, lootbox):
+def add_to_loot(boxluck, boxluck_eq):
 	print("\033[33;1mNew LootBox™ gained!!\033[0m")
 	boxluck[0].loot_print_info()
 	beq = boxluck[0]
-	lootbox.loot_inv.append(beq)
+	LootBox.loot_inv.append(beq)
 	if len(boxluck_eq) > 0:
 		print("\033[33;1mNew LootBox™ gained!!\033[0m")
 		boxluck_eq[0].loot_print_info()
 		beq_eq = boxluck_eq[0]
-		lootbox.loot_inv.append(beq_eq)
+		LootBox.loot_inv.append(beq_eq)
+	boxluck = None
+	boxluck_eq = None
 
 def random_lootbox(recipe, player):
-	if recipe.quality == 0:
-		for lootbox in LootBox.random_loot_inv1:
-			random_box1 = lootbox.random_loot_inv1
-			pass
-		for loot_eq in LootBox.random_looteq_inv1:
-			random_box_eq1 = loot_eq.random_looteq_inv1
-			pass
-	elif recipe.quality == 1:
-		for loot_eq in LootBox.random_looteq_inv2:
-			random_box_eq2 = loot_eq.random_looteq_inv2
-			pass
-		for lootbox in LootBox.random_loot_inv1:
-			random_box1 = lootbox.random_loot_inv1
-			pass
-	elif recipe.quality == 2:
-		for lootbox in LootBox.random_loot_inv2:
-			random_box2 = lootbox.random_loot_inv2
-			pass
+	random_loot_boxes = {
+		0: (LootBox.random_loot_inv1, LootBox.random_looteq_inv1),
+		1: (LootBox.random_loot_inv1, LootBox.random_looteq_inv2),
+		2: (LootBox.random_loot_inv2, LootBox.random_looteq_inv2),
+		3: (LootBox.random_loot_inv3, LootBox.random_looteq_inv3),
+		4: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
+		5: (LootBox.random_loot_inv5, LootBox.random_looteq_inv5)
+	}
 
-	if recipe.unique_id == "rec001" or recipe.unique_id == "rec002" or recipe.unique_id == "rec003" or recipe.unique_id == "rec004":
-		boxluck = []
-		boxluck1 = random_box1[random.randint(0, len(random_box1) - 1)]
-		boxluck.append(boxluck1)
+	random_box, random_box_eq = random_loot_boxes.get(recipe.quality, (None, None))
+
+	if random_box is None or random_box_eq is None:
+		return
+
+	boxluck = [random_box[random.randint(0, len(random_box) - 1)]]
+
+	if random.random() < 0.50:
+		boxluck_eq = [random_box_eq[random.randint(0, len(random_box_eq) - 1)]]
+	else:
+		boxluck_eq = []
+
+	if recipe.quality == 5 and random.random() < 0.41:
+		random_box = LootBox.random_loot_inv6
+		random_box_eq = LootBox.random_looteq_inv6
+		boxluck = [random_box[random.randint(0, len(random_box) - 1)]]
 		if random.random() < 0.50:
-			boxluck_eq = []
-			boxluck_eq1 = random_box_eq1[random.randint(0, len(random_box_eq1) - 1)]
-			boxluck_eq.append(boxluck_eq1)
-		else:
-			boxluck_eq = []
-	elif recipe.unique_id == "rec005":
-		boxluck = []
-		boxluck1 = random_box1[random.randint(0, len(random_box1) - 1)]
-		boxluck.append(boxluck1)
-		if random.random() < 0.50:
-			boxluck_eq = []
-			boxluck_eq2 = random_box_eq2[random.randint(0, len(random_box_eq2) - 1)]
-			boxluck_eq.append(boxluck_eq2)
+			boxluck_eq = [random_box_eq[random.randint(0, len(random_box_eq) - 1)]]
 		else:
 			boxluck_eq = []
 
+	add_to_loot(boxluck, boxluck_eq)
 	
-	add_to_loot(boxluck, boxluck_eq, lootbox)
+
 
 def cooking_input(player):
 	recipe_list = player.player_inventory
@@ -444,7 +491,7 @@ def load_game(player):
 			load2 = pickle.load(menufile)
 			load2_list = list(load2)
 			player.name, player.level, player.experience = load2[:3]
-			print("2 - Save Slot 2 - " + f"{player.name} " + "| XP: " + f"{player.experience}")
+			print("2 - Save Slot 2 - " + f"{player.name} " + f"| Rating: {player.get_load_star()} " + "| XP: " + f"{player.experience}")
 			menufile.close()
 
 	if not os.path.exists("chef_3.pkl"):
@@ -455,7 +502,7 @@ def load_game(player):
 			load3 = pickle.load(menufile)
 			load3_list = list(load3)
 			player.name, player.level, player.experience = load3[:3]
-			print("3 - Save Slot 3 - " + f"{player.name} " + "| XP: " + f"{player.experience}")
+			print("3 - Save Slot 3 - " + f"{player.name} " + f"| Rating: {player.get_load_star()} " + "| XP: " + f"{player.experience}")
 			menufile.close()
 
 	print("4 - Go back")

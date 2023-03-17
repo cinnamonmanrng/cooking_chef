@@ -1,8 +1,9 @@
 import random
 
+# "ITEMS" ARE LABELLED AS EQUIPMENT IN THIS AND REST OF THE CODE
 class Player:
-	player_inventory = []
-	player_equip_inv = []
+	player_inventory = [] # inventory for recipes
+	player_equip_inv = [] # inventory for items
 
 	def __init__(self, name, level, experience, max_xp, next_level):
 		self.name = name
@@ -13,6 +14,9 @@ class Player:
 
 	def print_status(self):
 		print(f"\033[33;1mName:\033[0m {self.name} \n\033[33;1mRating:\033[0m {Experience.get_level_star(self)} \n\033[33;1mXP:\033[0m {self.experience} / {self.max_xp} \033[33;1muntil\033[0m {Experience.next_level_star(self)}")
+
+	def print_status_maxlvl(self):
+		print(f"\033[33;1mName:\033[0m {self.name} \n\033[33;1mRating:\033[0m {Experience.get_level_star(self)} \n\033[33;1mXP:\033[0m {self.experience}")
 
 	def check_inv(self):
 		if len(self.player_inventory) == 0:
@@ -29,30 +33,20 @@ class Player:
 				equip.print_equip_info()
 
 	def get_load_star(self):
-		if self.level == 0:
-			return "○"
-		elif self.level == 1:
-			return "☆"
-		elif self.level == 2:
-			return "☆☆"
-		elif self.level == 3:
-			return "☆☆☆"
-		elif self.level == 4:
-			return "☆☆☆☆"
-		elif self.level == 5:
-			return "☆☆☆☆☆"
-		elif self.level == 6:
-			return "★☆☆☆☆"
-		elif self.level == 7:
-			return "★★☆☆☆"
-		elif self.level == 8:
-			return "★★★☆☆"
-		elif self.level == 9:
-			return "★★★★☆"
-		elif self.level == 10:
-			return "★★★★★"
-		else: 
-			return "Invalid Level"
+		load_star_dict = {
+			0: "○",
+			1: "☆",
+			2: "☆☆",
+			3: "☆☆☆",
+			4: "☆☆☆☆",
+			5: "☆☆☆☆☆",
+			6: "★☆☆☆☆",
+			7: "★★☆☆☆",
+			8: "★★★☆☆",
+			9: "★★★★☆",
+			10: "★★★★★"
+		}
+		return load_star_dict.get(self.level, "Invalid Level called")
 
 class Experience(Player):
 	def __init__(self, experience, next_level, level):
@@ -60,56 +54,36 @@ class Experience(Player):
 		self.next_level = 0
 
 	def get_level_star(self):
-		if self.level == 0:
-			return "○"
-		elif self.level == 1:
-			return "☆"
-		elif self.level == 2:
-			return "☆☆"
-		elif self.level == 3:
-			return "☆☆☆"
-		elif self.level == 4:
-			return "☆☆☆☆"
-		elif self.level == 5:
-			return "☆☆☆☆☆"
-		elif self.level == 6:
-			return "★☆☆☆☆"
-		elif self.level == 7:
-			return "★★☆☆☆"
-		elif self.level == 8:
-			return "★★★☆☆"
-		elif self.level == 9:
-			return "★★★★☆"
-		elif self.level == 10:
-			return "★★★★★"
-		else: 
-			return "Invalid Level"
+		get_level_dict = {
+			0: "○",
+			1: "☆",
+			2: "☆☆",
+			3: "☆☆☆",
+			4: "☆☆☆☆",
+			5: "☆☆☆☆☆",
+			6: "★☆☆☆☆",
+			7: "★★☆☆☆",
+			8: "★★★☆☆",
+			9: "★★★★☆",
+			10: "★★★★★"
+		}
+		return get_level_dict.get(self.level, "Invalid Level called")
 
 	def next_level_star(self):
-		if self.level == 0 and self.next_level == 1:
-				return "☆"
-		elif self.level == 1 and self.next_level == 2:
-			return "☆☆"
-		elif self.level == 2 and self.next_level == 3:
-			return "☆☆☆"
-		elif self.level == 3 and self.next_level == 4:
-			return "☆☆☆☆"
-		elif self.level == 4 and self.next_level == 5:
-			return "☆☆☆☆☆"
-		elif self.level == 5 and self.next_level == 6:
-			return "★☆☆☆☆"
-		elif self.level == 6 and self.next_level == 7:
-			return "★★☆☆☆"
-		elif self.level == 7 and self.next_level == 8:
-			return "★★★☆☆"
-		elif self.level == 8 and self.next_level == 9:
-			return "★★★★☆"
-		elif self.level == 9 and self.next_level == 10:
-			return "★★★★★"
-		elif self.level == 10 and self.next_level == "MAX":
-			return "Max Level Reached"
-		else:
-			return "Invalid next level"
+   		next_levels_dict = {
+        	(0, 1): "☆",
+        	(1, 2): "☆☆",
+        	(2, 3): "☆☆☆",
+        	(3, 4): "☆☆☆☆",
+        	(4, 5): "☆☆☆☆☆",
+        	(5, 6): "★☆☆☆☆",
+        	(6, 7): "★★☆☆☆",
+        	(7, 8): "★★★☆☆",
+        	(8, 9): "★★★★☆",
+        	(9, 10): "★★★★★",
+        	(10, "MAX"): "Max Level Reached"
+    	}
+   		return next_levels_dict.get((self.level, self.next_level), "Invalid next level returned")
 
 
 class Item:
@@ -123,7 +97,11 @@ class Item:
 
 class Equipment(Item):
 	equipbox1_inv = []
-	# equipbox2_inv = []
+	equipbox2_inv = []
+	equipbox3_inv = []
+	equipbox4_inv = []
+	equipbox5_inv = []
+	equipbox6_inv = []
 
 	def __init__(self, name, description, rating, effect, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -142,25 +120,32 @@ class Equipment(Item):
 		print(f'{self.name}: {self.description} | Rating: {Equipment.equip_quality(self)}')
 
 	def equip_quality(self):
-		if self.rating == 0:
-			return "☆"
-		elif self.rating == 1:
-			return "★"
-		elif self.rating == 2:
-			return "★★"
-		elif self.rating == 3:
-			return "★★★"
-		elif self.rating == 4:
-			return "★★★★"
-		elif self.rating == 5:
-			return "★★★★★"
-		else:
-			print("Unrecognised Rating")
+		equip_q_dict = {
+			0: "☆",
+			1: "★",
+			2: "★★",
+			3: "★★★",
+			4: "★★★★",
+			5: "★★★★★"
+		}
+		return equip_q_dict.get(self.rating, "Unrecognised rating")
 
 class LootBox(Item):
 	loot_inv = []
+
+	# refer to chef_main to find specific items in these lists
 	random_loot_inv1 = []
+	random_loot_inv2 = []
+	random_loot_inv3 = []
+	random_loot_inv4 = []
+	random_loot_inv5 = []
+	random_loot_inv6 = [] # only for mythical items
 	random_looteq_inv1 = []
+	random_looteq_inv2 = []
+	random_looteq_inv3 = []
+	random_looteq_inv4 = []
+	random_looteq_inv5 = []
+	random_looteq_inv6 = [] # only for mythical items
 
 	def __init__(self, name, description, rating, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -178,22 +163,23 @@ class LootBox(Item):
 				lootbox.loot_print_info()
 
 	def loot_rating(self): 
-		if self.rating == 0:
-			return "☆"
-		elif self.rating == 1:
-			return "★"
-		elif self.rating == 2:
-			return "★★"
-		elif self.rating == 3:
-			return "★★★"
-		elif self.rating == 4:
-			return "★★★★"
-		elif self.rating == 5:
-			return "★★★★★"
+		loot_r_dict = {
+			0: "☆",
+			1: "★",
+			2: "★★",
+			3: "★★★",
+			4: "★★★★",
+			5: "★★★★★"
+		}
+		return loot_r_dict.get(self.rating, "Invalid loot rating returned")
 
 class Recipe:
 	lootbox1_inv = [] # lootbox1 in chef_main, other boxes follow the same criteria
 	lootbox2_inv = []
+	lootbox3_inv = []
+	lootbox4_inv = []
+	lootbox5_inv = []
+	lootbox6_inv = [] # only for mythical boxes
 
 	def __init__(self, name, exp_value, quality, timer, quantity, unique_id):
 		self.name = name
@@ -212,20 +198,15 @@ class Recipe:
 				recipe.print_info()
 
 	def recipe_quality(self):
-		if self.quality == 0:
-			return "☆"
-		elif self.quality == 1:
-			return "★"
-		elif self.quality == 2:
-			return "★★"
-		elif self.quality == 3:
-			return "★★★"
-		elif self.quality == 4:
-			return "★★★★"
-		elif self.quality == 5:
-			return "★★★★★"
-		else:
-			print("Unrecognised quality")
+		recipe_q_dict = {
+			0: "☆",
+			1: "★",
+			2: "★★",
+			3: "★★★",
+			4: "★★★★",
+			5: "★★★★★"
+		}
+		return recipe_q_dict.get(self.quality, "Unrecognised recipe_quality returned")
 
 	def print_info(self):
 		print(f'{self.name}: XP gained from this recipe: {self.exp_value} | Quality: {Recipe.recipe_quality(self)} | Time to cook: {self.timer}')

@@ -1,37 +1,58 @@
+import importlib
+import subprocess
+import time
+
+try:
+	importlib.import_module('pygame')
+except ImportError:
+	install_key = "Y"
+	if install_key == "Y":
+		print("\033[42mInstalling additional dependencies\033[0m")
+		subprocess.call(['pip', 'install', 'pygame'])
+	else:
+		print("\033[43mRequired dependencies not installed, please install manually by using 'pip install pygame', or try opening the application again!\033[0m")
+		time.sleep(5)
+		exit()
+try:
+	importlib.import_module('keyboard')
+except ImportError:
+	install_key = "Y"
+	if install_key == "Y":
+		print("\033[42mInstalling additional dependencies\033[0m")
+		subprocess.call(['pip', 'install', 'keyboard'])
+	else:
+		print("\033[43mRequired dependencies not installed, please install manually by using 'pip install keyboard', or try opening the application again!\033[0m")
+		time.sleep(5)
+		exit()
+
 import pygame
-import os
-# from chef_main import *
+import keyboard
 
-pygame.init()
 
-clock = pygame.time.Clock()
+def main():
+	pygame.init()
+	screen = pygame.display.set_mode((1040, 550))
+	pygame.display.set_caption("Cooking Chef | Build:(A)1_16/03/2023")
 
-screen = pygame.display.set_mode((640, 480))
-pygame.display.set_caption("Cooking Chef | indev Build:20_06/03/2023")
+	icon = pygame.image.load("Assets/favicon.png")
+	pygame.display.set_icon(icon)
 
-icon = pygame.image.load("favicon.png")
-pygame.display.set_icon(icon)
+	menuButton = pygame.image.load("Assets/menu_button_1.png")
 
-background = pygame.image.load("background.png")
-background.set_alpha(100)
-screen.blit(background, (0, 0))
+	def renderGame(screen):
+		screen.fill((0,0,0))
 
-font = pygame.font.Font(None, 24)
-font2 = pygame.font.Font(None, 16)
-text_surface1 = font.render("An announcment from Jonathan Emerald Corporation©!", True, (255, 100, 65))
-text_surface2 = font2.render("This application is currently under maintenance, please come back later!", True, (255, 100, 65))
+		screen.blit(menuButton, (0,0))
 
-screen.blit(text_surface1, (100, 200))
-screen.blit(text_surface2, (120, 220))
+	running = True
+	while running:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				running = False
 
-pygame.display.flip()
+		renderGame(screen)
+		pygame.display.update()
 
-running = True
-while running:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			running = False
-			
-	clock.tick(60)
 
-pygame.quit()
+if __name__ == "__main__":
+	main()
