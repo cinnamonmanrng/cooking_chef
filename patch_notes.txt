@@ -1,3 +1,7 @@
+Build 22.1 / Windows:
+- Fixed a bug that caused all items to be unusable unless they were items specific to a specific recipe
+- Added all recipe, item and lootbox instances to chef_call_list
+
 Build 22 / Windows: 
 
 - Replaced some of the get rating and get level functions in chef_skeleton to be dictionaries as this makes it easier to add and remove levels and ratings 

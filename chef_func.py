@@ -10,6 +10,7 @@
 
 import time
 from chef_skeleton import *
+from chef_call_list import *
 import os
 import pickle
 import importlib
@@ -19,7 +20,13 @@ def timer(player, recipe, equipment, equip_use_select):
 	double_lootbox_chance = 0.25
 	if equip_use_select == True:
 
-		if recipe.unique_id != "rec001" or recipe.unique_id != "rec003" and equipment.unique_id == "eq003":
+		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
+			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		elif recipe.unique_id != "rec003" and equipment.unique_id == "eq003":
 			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
@@ -43,13 +50,6 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment = None
 			return equip_use_select, equipment
 
-		elif recipe.unique_id == "rec009" and equipment.unique_id == "eq008":
-			recipe.exp_value += equipment.effect
-			print(f"{equipment.name} Has been used!")
-			equipment.quantity -= 1
-			if equipment.quantity <= 0:
-				player.player_equip_inv.remove(equipment)
-
 		elif equipment.unique_id == "eq001" or equipment.unique_id == "eq005":
 			recipe.exp_value += equipment.effect
 			print(f"{equipment.name} Has been used!")
@@ -66,6 +66,13 @@ def timer(player, recipe, equipment, equip_use_select):
 
 		else: 
 			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+
+		if recipe.unique_id == "rec009" and equipment.unique_id == "eq008":
+			recipe.exp_value += equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
