@@ -30,8 +30,8 @@ If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask with
 </br>
 If you encounter issues with the game or need technical support, submit these to with a detailed error report and your python version: ccg.issues@gmail.com or join our discord: [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
-! Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file
 ## Version History:
+<b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
 ### Build 22 / Windows
 - Replaced some of the get rating and get level functions in chef_skeleton to be dictionaries as this makes it easier to add and remove levels and ratings 
 - Added a feature to chef_main check whether the user has the required modules installed on starting the application (also in chef_game to check for pygame) 
