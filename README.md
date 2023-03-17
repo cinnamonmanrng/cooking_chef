@@ -32,6 +32,9 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 22.1 / Windows
+- Fixed a bug that caused all items to be unusable unless they were items specific to a specific recipe
+- Added all recipe, item and lootbox instances to chef_call_list
 ### Build 22 / Windows
 - Replaced some of the get rating and get level functions in chef_skeleton to be dictionaries as this makes it easier to add and remove levels and ratings 
 - Added a feature to chef_main check whether the user has the required modules installed on starting the application (also in chef_game to check for pygame) 
@@ -56,7 +59,5 @@ If you encounter issues with the game or need technical support, submit these to
 - Added a new lootbox with new items and recipes
 ### Build 21.2
 - Fixed a problem with timer permanently saving decreases in cooking times and increases in xp value
-### Build 21.1
-- Fixed a gamebreaking issue with the timer mechanic
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
