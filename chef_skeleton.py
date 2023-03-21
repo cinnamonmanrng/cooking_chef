@@ -1,6 +1,6 @@
 import random
 
-# "ITEMS" ARE LABELLED AS EQUIPMENT IN THIS AND REST OF THE CODE
+# !! "ITEMS" ARE LABELLED AS EQUIPMENT IN THIS AND REST OF THE CODE
 class Player:
 	player_inventory = [] # inventory for recipes
 	player_equip_inv = [] # inventory for items
@@ -131,21 +131,21 @@ class Equipment(Item):
 		return equip_q_dict.get(self.rating, "Unrecognised rating")
 
 class LootBox(Item):
-	loot_inv = []
+	loot_inv = [] # player's lootbox inventory
 
 	# refer to chef_main to find specific items in these lists
-	random_loot_inv1 = []
-	random_loot_inv2 = []
-	random_loot_inv3 = []
-	random_loot_inv4 = []
-	random_loot_inv5 = []
-	random_loot_inv6 = [] # only for mythical items
+	random_loot_inv1 = [] # common
+	random_loot_inv2 = [] # uncommon
+	random_loot_inv3 = [] # rare
+	random_loot_inv4 = [] # epic
+	random_loot_inv5 = [] # legendary
+	random_loot_inv6 = [] # mythical
 	random_looteq_inv1 = []
 	random_looteq_inv2 = []
 	random_looteq_inv3 = []
 	random_looteq_inv4 = []
 	random_looteq_inv5 = []
-	random_looteq_inv6 = [] # only for mythical items
+	random_looteq_inv6 = [] 
 
 	def __init__(self, name, description, rating, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -174,7 +174,7 @@ class LootBox(Item):
 		return loot_r_dict.get(self.rating, "Invalid loot rating returned")
 
 class Recipe:
-	lootbox1_inv = [] # lootbox1 in chef_main, other boxes follow the same criteria
+	lootbox1_inv = [] # based on player level, refer to random_lootbox function in chef_func to get exact levels
 	lootbox2_inv = []
 	lootbox3_inv = []
 	lootbox4_inv = []
@@ -187,7 +187,7 @@ class Recipe:
 		self.quality = quality
 		self.timer = timer # in seconds
 		self.quantity = quantity
-		self.unique_id = unique_id # used to check unique equipment against recipes
+		self.unique_id = unique_id # used to check unique equipment against recipes in timer function
 
 	@classmethod
 	def check_recipe_inv(cls):

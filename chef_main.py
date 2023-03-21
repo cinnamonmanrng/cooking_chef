@@ -27,13 +27,13 @@ except ImportError:
 
 import keyboard
 
-version_id = "build:23 / date:17/03/23 | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;5;1mbuild:23 / date:21/03/23\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():
 	for i in range(101):
 		time.sleep(0.05)
-		print(f"\r{i:02d}: {'#'*(i//3)}", end="", flush=True)
+		print(f"\r{i:02d}: {'█'*(i//3)}", end="", flush=True)
 
 def tutorial(player):
 	global tutorial_completed
@@ -45,9 +45,14 @@ def tutorial(player):
 			LootBox.loot_inv.append(lootbox1)
 			print("\033[33;1mNew LootBox™ Acquired!\033[0m")
 			lootbox1.loot_print_info()
+			print("\033[32;1m+200xp\033[0m for skipping the tutorial!")
+			player.experience += 200
 			main(player)
 		elif tutskip.upper() == "N":
 			pass
+		else:
+			print("Invalid input, please try again!")
+			tutorial(player)
 
 		print("To continue along within the tutorial, press the RETURN key, unless you are told to wait!")
 		returninp = input()
@@ -115,7 +120,7 @@ def tutorial(player):
 		if keyboard.is_pressed('RETURN'):
 			returninp = None
 			pass
-		print("Chef Mike: There are ways to get past this with items later on, but we'll get to that later on.")
+		print("Chef Mike: There are ways to get past this with items later on, but you'll see what I mean soon enough.")
 		returninp = input()
 		if keyboard.is_pressed('RETURN'):
 			returninp = None
@@ -138,20 +143,20 @@ def tutorial(player):
 		print("... Adding recipe to MENU, please wait!")
 		progress_bar()
 
-		def cook_tut_recipe(player):
+		def open_tut_recipe(player):
 			print("\nWhat would you like to do?")
 			print("1 - Cook a recipe")
 			try:
 				tut_inp2 = int(input())
 			except ValueError:
 				print("Invalid selection, please try again!")
-				return cook_tut_recipe(player)
+				return open_tut_recipe(player)
 			if tut_inp2 == 1:
 				cooking_input(player)
 			else:
 				print("Invalid Input, please try again!")
-				return cook_tut_recipe(player)
-		cook_tut_recipe(player)
+				return open_tut_recipe(player)
+		open_tut_recipe(player)
 		print("Chef Mike: So now you have opened a LootBox™ and cooked a recipe and gained a new LootBox™, and I'm fairly certain you don't remember how you cooked what you just cooked!")
 		returninp = input()
 		if keyboard.is_pressed('RETURN'):
@@ -192,21 +197,21 @@ def tutorial(player):
 		player.player_inventory.append(recipe1)
 		recipe1.print_info()
 
-		def use_item_tutorial(player):
+		def open_tut_item(player):
 			print("What would you like to do?")
 			print("1 - Cook a recipe")
 			try:
 				tut_inp3 = int(input())
 			except ValueError:
 				print("Invalid selection, please try again!")
-				return use_item_tutorial(player)
+				return open_tut_item(player)
 			if tut_inp3 == 1:
 				cooking_input(player)
 			else:
 				print("Invalid selection, please try again!")
-				return use_item_tutorial(player)
+				return open_tut_item(player)
 
-		use_item_tutorial(player)
+		open_tut_item(player)
 
 		print("Chef Mike: Notice how you gained 50 more experience points for cooking this recipe with that item.")
 		returninp = input()
@@ -270,7 +275,8 @@ def main(player):
 			print("1 - Recipes Notebook")
 			print("2 - Item Storage")
 			print("3 - LootBox™ Storage")
-			print("4 - Go back")
+			print("4 - Sell recipes")
+			print("5 - Go back")
 			try:
 				check_inv_input = int(input("What would you like to check?: "))
 			except ValueError:
@@ -286,6 +292,9 @@ def main(player):
 				LootBox.check_loot_inv()
 				return main(player)
 			elif check_inv_input == 4:
+				sell_item(player) # this is sell recipes for now but might also include equipment in the future
+				return main(player)
+			elif check_inv_input == 5:
 				return main(player)
 		elif gameloop_input == 3:
 			if len(LootBox.loot_inv) <= 0:
@@ -295,7 +304,7 @@ def main(player):
 				open_lootbox(player)
 				return main(player)
 		elif gameloop_input == 4:
-			print("Not in use")
+			print("\033[43mNot yet avaliable!\033[0m")
 			return main(player)		
 		elif gameloop_input == 5:
 			save_game(player)
@@ -316,6 +325,16 @@ def main_menu():
 	print("2 - Load saved game")
 	print("3 - Options")
 	print("4 - Exit game")
+
+	def player_name_input():
+		global playername
+		playername = input("Please enter your name chef! (Max 16 char.): ")
+		if len(playername) > 16:
+			print("Name is too long, please enter a name under 16 characters!")
+			player_name_input()
+		else:
+			pass
+
 	try:
 		menu_input = int(input())
 	except ValueError:
@@ -323,8 +342,8 @@ def main_menu():
 		return main_menu()
 	if menu_input == 1:
 		player = Player("", 0, 0, 0, 0)
-		playername = input("Please enter your name, young chef!: ")
 		tutorial_completed = False
+		player_name_input()
 		player.name = playername
 		tutorial(player)
 	elif menu_input == 2:
@@ -332,7 +351,7 @@ def main_menu():
 		load_game(player)
 		if player.name == "":
 			menu_input = 1
-			playername = input("Please enter your name, young chef!: ")
+			player_name_input()
 			player.name = playername
 			tutorial_completed = False
 			tutorial(player)

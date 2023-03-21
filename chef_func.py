@@ -16,60 +16,70 @@ import pickle
 import importlib
 from inspect import isfunction
 
+def progress_bar(recipe):
+	for i in range(1, recipe.timer + 1):
+		time.sleep(1)
+		print(f"\r{i:02d}/{recipe.timer:02d}: {'♨'*(i)}", end="", flush=True)
+
+def call_func(full_module_name, func_name, *argv):
+	module = importlib.import_module(full_module_name)
+	for attribute_name in dir(module):
+		attribute = getattr(module, attribute_name)
+		if isfunction(attribute) and attribute_name == func_name:
+			attribute(*argv)
+
 def timer(player, recipe, equipment, equip_use_select):
 	double_lootbox_chance = 0.25
 	if equip_use_select == True:
 
-		if recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
-			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
-			equip_use_select = False
-			equipment = None
-			return equip_use_select, equipment
+# items with individual recipe requirements (refers to chef_call_list)
 
-		elif recipe.unique_id != "rec003" and equipment.unique_id == "eq003":
-			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
-			equip_use_select = False
-			equipment = None
-			return equip_use_select, equipment
-
-		elif recipe.unique_id != "rec006" and equipment.unique_id == "eq006":
-			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
-			equip_use_select = False
-			equipment = None
-			return equip_use_select, equipment
-
-		elif recipe.unique_id != "rec011" and equipment.unique_id == "eq007":
-			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
-			equip_use_select = False
-			equipment = None
-			return equip_use_select, equipment
-
-		elif recipe.unique_id != "rec009" and equipment.unique_id == "eq008":
-			print("\033[43mThis equipment cannot be used for this recipe!\033[0m")
-			equip_use_select = False
-			equipment = None
-			return equip_use_select, equipment
-
-		elif equipment.unique_id == "eq001" or equipment.unique_id == "eq005":
-			recipe.exp_value += equipment.effect
-			print(f"{equipment.name} Has been used!")
-			equipment.quantity -= 1
-			if equipment.quantity <= 0:
-				player.player_equip_inv.remove(equipment)
-
-		elif equipment.unique_id == "eq010":
-			recipe.quantity += equipment.effect
-			print(f"{equipment.name} Has been used!")
-			equipment.quantity -= 1
-			if equipment.quantity <= 0:
-				player.player_equip_inv.remove(equipment)
-
-		else: 
+		if recipe.unique_id == "rec001" and equipment.unique_id == "eq003":
 			recipe.timer -= equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id == "rec003" and equipment.unique_id == "eq003":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id != "rec001" and equipment.unique_id == "eq003":
+			print("\033[43mThis equipment cannot be used for this recipe!(1)\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+		elif recipe.unique_id != "rec003" and equipment.unique_id == "eq003": 
+			print("\033[43mThis equipment cannot be used for this recipe!(1)\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		if recipe.unique_id == "rec006" and equipment.unique_id == "eq006":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id != "rec006" and equipment.unique_id == "eq006":
+			print("\033[43mThis equipment cannot be used for this recipe!(2)\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		if recipe.unique_id == "rec011" and equipment.unique_id == "eq007":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id != "rec011" and equipment.unique_id == "eq007":
+			print("\033[43mThis equipment cannot be used for this recipe!(3)\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment			
 
 		if recipe.unique_id == "rec009" and equipment.unique_id == "eq008":
 			recipe.exp_value += equipment.effect
@@ -77,13 +87,41 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id != "rec009" and equipment.unique_id == "eq008":
+			print("\033[43mThis equipment cannot be used for this recipe!(4)\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment	
+
+# general items (work with any recipe)
+
+		if equipment.unique_id == "eq002" or equipment.unique_id == "eq004":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+
+		if equipment.unique_id == "eq001" or equipment.unique_id == "eq005":
+			recipe.exp_value += equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+
+		if equipment.unique_id == "eq010":
+			recipe.quantity += equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)	
 
 	if recipe.timer < 0:
 		recipe.timer = 0
 
 	print(recipe.name, "Has started cooking:", recipe.timer)		
-	time.sleep(recipe.timer)
-	print(recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
+	progress_bar(recipe)
+	print("\n", recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
 	player.experience += recipe.exp_value
 	recipe.quantity -= 1
 
@@ -106,14 +144,14 @@ def timer(player, recipe, equipment, equip_use_select):
 			"rec002": {"timer": 5, "exp_value": 25*5},
 			"rec003": {"timer": 10, "exp_value": 25*10},
 			"rec004": {"timer": 5, "exp_value": 25*5},
-			"rec005": {"timer": 12, "exp_value": 25*12},
-			"rec006": {"timer": 14, "exp_value": 25*14},
-			"rec007": {"timer": 10, "exp_value": 25*10},
-			"rec008": {"timer": 18, "exp_value": 25*18},
-			"rec009": {"timer": 15, "exp_value": 25*15},
-			"rec010": {"timer": 14, "exp_value": 25*14},
-			"rec011": {"timer": 20, "exp_value": 25*20},
-			"rec012": {"timer": 19, "exp_value": 25*19}
+			"rec005": {"timer": 12, "exp_value": 35*12},
+			"rec006": {"timer": 14, "exp_value": 35*14},
+			"rec007": {"timer": 10, "exp_value": 35*10},
+			"rec008": {"timer": 18, "exp_value": 35*18},
+			"rec009": {"timer": 15, "exp_value": 35*15},
+			"rec010": {"timer": 14, "exp_value": 35*14},
+			"rec011": {"timer": 20, "exp_value": 50*20},
+			"rec012": {"timer": 19, "exp_value": 50*19}
 		}
 
 		if unique_id in recipe_id_dict:
@@ -288,13 +326,13 @@ def player_level_up(player):
 
 def add_to_loot(boxluck, boxluck_eq):
 	print("\033[33;1mNew LootBox™ gained!!\033[0m")
-	boxluck[0].loot_print_info()
-	beq = boxluck[0]
+	boxluck.loot_print_info()
+	beq = boxluck
 	LootBox.loot_inv.append(beq)
-	if len(boxluck_eq) > 0:
+	if boxluck_eq != None:
 		print("\033[33;1mNew LootBox™ gained!!\033[0m")
-		boxluck_eq[0].loot_print_info()
-		beq_eq = boxluck_eq[0]
+		boxluck_eq.loot_print_info()
+		beq_eq = boxluck_eq
 		LootBox.loot_inv.append(beq_eq)
 	boxluck = None
 	boxluck_eq = None
@@ -302,37 +340,35 @@ def add_to_loot(boxluck, boxluck_eq):
 def random_lootbox(recipe, player):
 	random_loot_boxes = {
 		0: (LootBox.random_loot_inv1, LootBox.random_looteq_inv1),
-		1: (LootBox.random_loot_inv1, LootBox.random_looteq_inv2),
+		1: (LootBox.random_loot_inv1, LootBox.random_looteq_inv1),
 		2: (LootBox.random_loot_inv2, LootBox.random_looteq_inv2),
-		3: (LootBox.random_loot_inv3, LootBox.random_looteq_inv3),
-		4: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
-		5: (LootBox.random_loot_inv5, LootBox.random_looteq_inv5)
+		3: (LootBox.random_loot_inv2, LootBox.random_looteq_inv2),
+		4: (LootBox.random_loot_inv2, LootBox.random_looteq_inv2),
+		5: (LootBox.random_loot_inv3, LootBox.random_looteq_inv3),
+		6: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
+		7: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
+		8: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
+		9: (LootBox.random_loot_inv5, LootBox.random_looteq_inv5),
+		10: (LootBox.random_loot_inv6, LootBox.random_looteq_inv6)
 	}
 
-	random_box, random_box_eq = random_loot_boxes.get(recipe.quality, (None, None))
+	random_box, random_box_eq = random_loot_boxes.get(player.level, (None, None)) # needs rework to be player.level
 
 	if random_box is None or random_box_eq is None:
-		return
+		print("Invalid Player Level!!")
+		call_func('chef_main', 'main_menu')
 
-	boxluck = [random_box[random.randint(0, len(random_box) - 1)]]
+	boxluck = random_box[random.randint(0, len(random_box) - 1)]
 
-	if random.random() < 0.50:
-		boxluck_eq = [random_box_eq[random.randint(0, len(random_box_eq) - 1)]]
+	if player.level < 4 and random.random() < 0.50:
+		boxluck_eq = random_box_eq[random.randint(0, len(random_box_eq) - 1)]
+	elif player.level >= 4 and random.random() < 0.65:
+		boxluck_eq = random_box_eq[random.randint(0, len(random_box_eq) - 1)]
 	else:
-		boxluck_eq = []
-
-	if recipe.quality == 5 and random.random() < 0.41:
-		random_box = LootBox.random_loot_inv6
-		random_box_eq = LootBox.random_looteq_inv6
-		boxluck = [random_box[random.randint(0, len(random_box) - 1)]]
-		if random.random() < 0.50:
-			boxluck_eq = [random_box_eq[random.randint(0, len(random_box_eq) - 1)]]
-		else:
-			boxluck_eq = []
+		boxluck_eq = None
 
 	add_to_loot(boxluck, boxluck_eq)
 	
-
 
 def cooking_input(player):
 	recipe_list = player.player_inventory
@@ -389,6 +425,47 @@ def cooking_input(player):
 			return cooking_input(player)
 		timer(player, recipe, equipment, equip_use_select)
 		player_level_up(player)
+
+def sell_item(player):
+	print("1 - Sell recipes")
+	print("2 - Go back")
+	try:
+		player_selection = int(input("What would you like to do?: "))
+	except ValueError:
+		print("\033[43mSelection was invalid, please try again!\033[0m")
+
+	if player_selection == 1:
+		if len(player.player_inventory) > 0:
+			for index, recipe in enumerate(player.player_inventory, 1):
+				xpvalue = recipe.exp_value / 4
+				round(xpvalue, 0)
+				print(index, f"{recipe.name} XP gained from selling this recipe: {xpvalue}")
+			try:
+				rec_del_select = int(input("Which recipe would you like to sell?: "))
+			except ValueError:
+				print("\033[43mSelection is invalid, please try again!\033[0m")
+				return sell_item(player)
+			if rec_del_select >= 1:
+				recipe.quantity -= 1
+				player.experience += xpvalue
+				print("You gained: " + f"\033[32;1m+{xpvalue}\033[0m " + "XP!" )
+				if recipe.quantity <= 0:
+					player.player_inventory.remove(recipe)
+			elif rec_del_select <= 0:
+				print("Your selection is invalid, please try again!")
+				return sell_item(player)
+		elif len(player.player_inventory) <= 0:
+			print("\033[43mYou have no recipes to choose from!\033[0m")
+			if len(player.player_inventory) <= 0 and len(LootBox.loot_inv) <= 0:
+				print("Since you have no recipes or LootBox™ in your inventory, here is a spare one, don't lose all your LootBoxes™ again!")
+				print("\033[33;1mNew LootBox™ gained!!")
+				LootBox.loot_inv.append(lootbox1)
+				lootbox1.loot_print_info()
+				return
+			else:
+				return sell_item(player)
+	elif player_selection == 2:
+		return
 
 def save_game(player):
 
@@ -471,12 +548,9 @@ def save_game(player):
 		elif ask_to_save.upper() == "N":
 			print("\033[43mPlayer data not saved!\033[0m")
 			pass
-def call_func(full_module_name, func_name, *argv):
-	module = importlib.import_module(full_module_name)
-	for attribute_name in dir(module):
-		attribute = getattr(moduel, attribute_name)
-		if isfunction(attribute) and attribute_name == func_name:
-			attribute(*argv)
+		else:
+			print("Invalid input, please try again!")
+			save_game(player)
 
 def load_game(player):
 	if not os.path.exists("chef_1.pkl"):
@@ -514,7 +588,11 @@ def load_game(player):
 
 	print("4 - Go back")
 	print("5 - Delete a save file")
-	ask_save_load = int(input("Choose your option: "))
+	try:
+		ask_save_load = int(input("Choose your option: "))
+	except ValueError:
+		print("Selection is not in range, please select an option from the provided list!")
+		return load_game(player)
 
 	if ask_save_load == 1:
 		if os.path.exists("chef_1.pkl"):
@@ -565,7 +643,7 @@ def load_game(player):
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 4:
-		call_func('chef_main', 'main_menu', None)
+		call_func('chef_main', 'main_menu')
 	elif ask_save_load == 5:
 		print("1 - Remove save in slot 1")
 		print("2 - Remove save in slot 2")
