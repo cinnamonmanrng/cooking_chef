@@ -10,7 +10,6 @@
 
 import time
 from chef_func import *
-from chef_call_list import *
 import subprocess
 import importlib
 
@@ -20,14 +19,14 @@ except ImportError:
 	install_key = "Y"
 	if install_key == "Y":
 		print("\033[42mInstalling additional dependencies\033[0m")
-		subprocess.call(['pip', 'install', 'keyboard'])
+		subprocess.call(['pip3', 'install', 'keyboard'])
 	else:
-		print("\033[43mRequired dependencies not installed, please install manually by using 'pip install keyboard', or try opening the application again!\033[0m")
+		print("\033[43mRequired dependencies not installed, please install manually by using 'pip3 install keyboard', or try opening the application again!\033[0m")
 		exit()
 
 import keyboard
 
-version_id = "\033[35;5;1mbuild:23 / date:21/03/23\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;1mbuild:24 / date:21/03/23\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():
@@ -38,6 +37,7 @@ def progress_bar():
 def tutorial(player):
 	global tutorial_completed
 	player_level_up(player)
+	player.print_status()
 	if tutorial_completed == False:
 		tutskip = input("Would you like to skip the tutorial? (Y/N): ")
 		if tutskip.upper() == "Y":
@@ -253,8 +253,27 @@ def tutorial(player):
 
 
 def main(player):
+	claim_loot = False
+
 	while True:
 		player_level_up(player)
+		if player.level < 10:
+			player.print_status()
+		elif player.level == 10:
+			player.print_status_maxlvl()
+
+		def multiple_recipe_display():
+			if player.meatballs_cooked >= 1:
+				print(f"\033[32m{recipe5.name}\033[0m: " + f"{player.meatballs_cooked}")
+			if player.tomatosauce_cooked >= 1:
+				print(f"\033[32m{recipe8.name}\033[0m: " + f"{player.tomatosauce_cooked}")
+			if player.spaghetti_cooked >= 1:
+				print(f"\033[32m{recipe9.name}\033[0m: " + f"{player.spaghetti_cooked}")
+			else:
+				pass
+
+		multiple_recipe_display()
+
 		print("\033[44m------MAIN MENU------\033[0m")
 		print("1 - Cook a recipe")
 		print("2 - Browse your storage")
@@ -262,6 +281,12 @@ def main(player):
 		print("4 - View your statistics")
 		print("5 - Save your game")
 		print("6 - Exit game")
+		if len(player.player_inventory) <= 0 and len(LootBox.loot_inv) <= 0:
+			print("7 - Claim a LootBox™")
+			claim_loot = True
+		else:
+			pass
+
 		try:
 			gameloop_input = int(input("Which option would you like to continue with?: "))
 		except ValueError:
@@ -312,6 +337,10 @@ def main(player):
 		elif gameloop_input == 6:
 			print("\033[36mThank you for playing!\033[0m")
 			exit()
+		elif gameloop_input == 7 and claim_loot == True:
+			claim_lootbox(player)
+			claim_loot = False
+			return main(player)
 		else:
 			print("\033[43mInvalid selection, please try again!\033[0m")
 
@@ -320,7 +349,6 @@ def main_menu():
 	print("\033[42;15mWelcome to Cooking Chef!\033[0m")
 	print("\033[44mYou are playing on:\033[0m " + version_id)
 	print("What would you like to do?")
-	print("\nSelect your option:")
 	print("1 - Start a new game")
 	print("2 - Load saved game")
 	print("3 - Options")
@@ -336,7 +364,7 @@ def main_menu():
 			pass
 
 	try:
-		menu_input = int(input())
+		menu_input = int(input("Select your option: "))
 	except ValueError:
 		print("Please pick an option from the provided list!")
 		return main_menu()

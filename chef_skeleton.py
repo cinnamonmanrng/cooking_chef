@@ -11,6 +11,9 @@ class Player:
 		self.experience = experience
 		self.max_xp = max_xp
 		self.next_level = next_level
+		self.meatballs_cooked = 0
+		self.spaghetti_cooked = 0
+		self.tomatosauce_cooked = 0
 
 	def print_status(self):
 		print(f"\033[33;1mName:\033[0m {self.name} \n\033[33;1mRating:\033[0m {Experience.get_level_star(self)} \n\033[33;1mXP:\033[0m {self.experience} / {self.max_xp} \033[33;1muntil\033[0m {Experience.next_level_star(self)}")
@@ -20,7 +23,7 @@ class Player:
 
 	def check_inv(self):
 		if len(self.player_inventory) == 0:
-			print("Your inventory is empty!")
+			print("You do not have any recipes!")
 		else:
 			for recipe in self.player_inventory:
 				recipe.print_info()
@@ -96,12 +99,12 @@ class Item:
 		print(f'{self.name}: {self.description} | Rating: {self.rating}') # print info for player inventory check
 
 class Equipment(Item):
-	equipbox1_inv = []
-	equipbox2_inv = []
-	equipbox3_inv = []
-	equipbox4_inv = []
-	equipbox5_inv = []
-	equipbox6_inv = []
+	equipbox1_inv = [] # common
+	equipbox2_inv = [] # uncommon
+	equipbox3_inv = [] # rare
+	equipbox4_inv = [] # epic
+	equipbox5_inv = [] # legendary
+	equipbox6_inv = [] # mythical
 
 	def __init__(self, name, description, rating, effect, quantity, unique_id):
 		super().__init__(name, description, rating, quantity)
@@ -134,17 +137,29 @@ class LootBox(Item):
 	loot_inv = [] # player's lootbox inventory
 
 	# refer to chef_main to find specific items in these lists
+	# make these into non rarity based lootboxes which instead have a few rare items and mostly less rare items.
 	random_loot_inv1 = [] # common
-	random_loot_inv2 = [] # uncommon
-	random_loot_inv3 = [] # rare
-	random_loot_inv4 = [] # epic
-	random_loot_inv5 = [] # legendary
+	random_loot_inv1_1 = [] # common and special recipe box
+	random_loot_inv2 = [] # common / uncommon
+	random_loot_inv2_1 = [] # more uncommon than common
+	random_loot_inv3 = [] # uncommon / rare
+	random_loot_inv3_1 = [] # more rare than uncommon
+	random_loot_inv4 = [] # rare / epic
+	random_loot_inv4_1 = [] # more epic than rare
+	random_loot_inv5 = [] # epic / legendary
+	random_loot_inv5_1 = [] # more legendary
 	random_loot_inv6 = [] # mythical
+	
 	random_looteq_inv1 = []
+	random_looteq_inv1_1 = []
 	random_looteq_inv2 = []
+	random_looteq_inv2_1 = []
 	random_looteq_inv3 = []
+	random_looteq_inv3_1 = []
 	random_looteq_inv4 = []
+	random_looteq_inv4_1 = []
 	random_looteq_inv5 = []
+	random_looteq_inv5_1 = []
 	random_looteq_inv6 = [] 
 
 	def __init__(self, name, description, rating, quantity, unique_id):
@@ -174,12 +189,17 @@ class LootBox(Item):
 		return loot_r_dict.get(self.rating, "Invalid loot rating returned")
 
 class Recipe:
-	lootbox1_inv = [] # based on player level, refer to random_lootbox function in chef_func to get exact levels
-	lootbox2_inv = []
-	lootbox3_inv = []
-	lootbox4_inv = []
-	lootbox5_inv = []
-	lootbox6_inv = [] # only for mythical boxes
+	lootbox1_inv = [] # common
+	lootbox1_1_inv = [] # alt common
+	lootbox1_2_inv = [] # alt common
+	lootbox1_3_inv = [] # lb005 unique
+	lootbox2_inv = [] # uncommon
+	lootbox2_1_inv = [] # alt uncommon
+	lootbox3_inv = [] # rare
+	lootbox3_1_inv = [] # alt rare
+	lootbox4_inv = [] # epic
+	lootbox5_inv = [] # legendary
+	lootbox6_inv = [] # mythical
 
 	def __init__(self, name, exp_value, quality, timer, quantity, unique_id):
 		self.name = name
