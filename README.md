@@ -32,6 +32,20 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 24 / Windows
+- Changed: player's status will now be printed through the main function opposed to using the level up function, this avoids double printing it after finishing a recipe
+- Changed: recipe progress bar now prints with a different symbol
+- Changed: using an item on a recipe now correctly displays "item" instead of the script term "equipment"
+- Changed: Older recipes, items and lootboxes have now been replaced by new ones
+- Changed: selling a recipe now gives the player 1/5 of the xp amount instead of 1/4
+- Changed: random lootboxes chances for an item lootbox now change based on player level, a player below level 2 has a 50% chance to recieve an item lootbox, from level 2 to level 4 the chance increases to 65%, level 4 to 6 chance is 75%, level 6 to 8 chance is 80% and above level 8 chance is 99%
+- Changed: Levels 1 - 4 now have different xp requirements, level 1 starts at 2000 xp, level 2 at 4500, level 3 at 7000 and level 4 at 12500
+- Added: New recipes, items and lootboxes with a wider variety of recipes and items from different lootboxes
+- Added: Recipes that require one or more other recipes to be cooked beforehand, these recipes will also reward the player with more experience but they will also take more time
+- Added: Option to claim a LootBox™ in the game menu ("main" function) when the player has no more recipes and no lootboxes to open
+- Fixed: Issue where selling a recipe would give you a decimal number from the xp amount
+- Fixed: Player will no longer be given a special recipe when they have no other recipes in their inventory
+- Special Recipe: Even though you can select an item before cooking a special recipe, it will not use the item if you do not have the correct ingredients cooked to cook that recipe
 ### Build 3 / MacOS
 - Updated MacOS version to align with the windows version of the game, the changes are the same so the patch notes for the windows version are inclusive of the MacOS version.
 ### Build 23 / Windows
@@ -63,8 +77,5 @@ If you encounter issues with the game or need technical support, submit these to
 - Fixed a bug that caused lootboxes to only provide the same item over and over again
 - Added a rating display for save slot 2 and 3 that was missing before
 - Added a 41% chance to get a mythical lootbox at recipe rating 5
-### Build 1.1 MacOS
-- Created a version for MacOS
-  - Tutorial cannot be played as keyboard module does not work properly within MacOS as of yet
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
