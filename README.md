@@ -32,6 +32,12 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 24.1 / Windows
+- Changed: Save files will now be generated and stored in "Saves" folder inside the main game folder, creates less clutter overall.
+- Changed: Cleared some unused files in the game folder
+- Fixed: Visual bug when trying to delete a save file from an empty slot where the notification colour of the message "Save file slot (2 or 3) is empty" would fill every bit of text with the same colour.
+- Added: Logging system that stores log files in "Logs" folder, creates log entries of specific events and errors that are used for reference in case there is a bug needing a fix.
+- Added: More recipes, items and lootboxes for qualities 0 to 2
 ### Build 24 / Windows
 - Changed: player's status will now be printed through the main function opposed to using the level up function, this avoids double printing it after finishing a recipe
 - Changed: recipe progress bar now prints with a different symbol
@@ -62,20 +68,5 @@ If you encounter issues with the game or need technical support, submit these to
 ### Build 22.1 / Windows
 - Fixed a bug that caused all items to be unusable unless they were items specific to a specific recipe
 - Added all recipe, item and lootbox instances to chef_call_list
-### Build 22 / Windows
-- Replaced some of the get rating and get level functions in chef_skeleton to be dictionaries as this makes it easier to add and remove levels and ratings 
-- Added a feature to chef_main check whether the user has the required modules installed on starting the application (also in chef_game to check for pygame) 
-- Removed unnecessary double imports
-- Fixed a slight bug with lootboxes when trying to run open_lootbox function when the player's lootbox inventory is empty which did not give you any prompts that the inventory is empty
-- Fixed an issue with the keyboard module not importing properly
-- Changed the look of max level to only include the experience instead of also listing next_level and max_xp
-- Created a start for the pygame application
-- Added new recipes, lootboxes and items
-- Optimised timer function to have a dictionary to check for recipe_id instead of if statements in chef_func
-- Massively improved on code in chef_func, made it much easier to work with and read
-- Removed debugging statements
-- Fixed a bug that caused lootboxes to only provide the same item over and over again
-- Added a rating display for save slot 2 and 3 that was missing before
-- Added a 41% chance to get a mythical lootbox at recipe rating 5
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
