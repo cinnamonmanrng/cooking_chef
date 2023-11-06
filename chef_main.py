@@ -1,13 +1,6 @@
 # text colour: print("\033[1;32;40m Bright Green  \n")
 # reset colour: print("\033[0m Hiya")
 
-# common: \033[32m
-# uncommon: \033[32;1m
-# rare: \033[34m
-# epic: \033[35m
-# legendary: \033[31;1m
-# mythic/unique: \033[36;1m
-
 import time
 from chef_func import *
 import subprocess
@@ -26,7 +19,7 @@ except ImportError:
 
 import keyboard
 
-version_id = "\033[35;1mbuild:24 / date:21/03/23\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;1mbuild:24.1 / date:05/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():
@@ -47,8 +40,10 @@ def tutorial(player):
 			lootbox1.loot_print_info()
 			print("\033[32;1m+200xp\033[0m for skipping the tutorial!")
 			player.experience += 200
+			log_message("Tutorial Skipped by player", level=logging.INFO)
 			main(player)
 		elif tutskip.upper() == "N":
+			log_message("Tutorial started by player", level=logging.INFO)
 			pass
 		else:
 			print("Invalid input, please try again!")
@@ -240,6 +235,7 @@ def tutorial(player):
 
 			if tut_inp4 == 1:
 				tutorial_completed = True
+				log_message("Tutorial completed", level=logging.INFO)
 				main(player)
 			elif tut_inp4 == 2:
 				tutorial(player, tutorials_skipped)
@@ -335,11 +331,13 @@ def main(player):
 			save_game(player)
 			return main(player)
 		elif gameloop_input == 6:
+			log_message("Game Exited by player", level=logging.INFO)
 			print("\033[36mThank you for playing!\033[0m")
 			exit()
 		elif gameloop_input == 7 and claim_loot == True:
 			claim_lootbox(player)
 			claim_loot = False
+			log_message("Player claimed lootbox from claim_loot", level=logging.INFO)
 			return main(player)
 		else:
 			print("\033[43mInvalid selection, please try again!\033[0m")
@@ -359,8 +357,10 @@ def main_menu():
 		playername = input("Please enter your name chef! (Max 16 char.): ")
 		if len(playername) > 16:
 			print("Name is too long, please enter a name under 16 characters!")
+			log_message("Inputted name was over 16 characters", level=logging.INFO)
 			player_name_input()
 		else:
+			log_message(f"Player set name to: {playername}", level=logging.INFO)
 			pass
 
 	try:
@@ -387,9 +387,37 @@ def main_menu():
 			tutorial_completed = True
 			main(player)
 	elif menu_input == 3:
-		print("\033[43mOptions not avaliable yet, please check again later!\033[0m")
+		global logging_enabled
+
+		print("\033[43mLogs will be force enabled for the time being!")
+		print("No other options avaliable, returning to menu")
 		return main_menu()
+
+	#	if logging_enabled == True:
+	#		print("1. Logs: turn off logging")
+	#	elif logging_enabled == False:
+	#		print("1. Logs: turn on logging")
+
+	#	print("2. Go back")
+
+	#	try:
+	#		ask_menu3_option = int(input("Select your option: "))
+	#	except ValueError:
+	#		print("Please pick an option from the provided list")
+	#		return main_menu()
+	#	if ask_menu3_option == 1 and logging_enabled == True:
+	#		logging_enabled = False
+	#		print("\033[43mLogging has now been turned off!\033[0m")
+	#		return main_menu()
+	#	elif ask_menu3_option == 1 and logging_enabled == False:
+	#		logging_enabled = True
+	#		print("\033[43mLogging has now been turned on!\033[0m")
+	#		return main_menu()
+	#	elif ask_menu3_option == 2:
+	#		return main_menu()
+
 	elif menu_input == 4:
+		log_message("Game Exited by player", level=logging.INFO)		
 		print("\033[36mThank you for playing!\033[0m")
 		exit()
 	else:

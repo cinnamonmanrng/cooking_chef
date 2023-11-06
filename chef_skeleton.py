@@ -136,7 +136,7 @@ class Equipment(Item):
 class LootBox(Item):
 	loot_inv = [] # player's lootbox inventory
 
-	# refer to chef_main to find specific items in these lists
+	# refer to chef_call_list to find specific items in these lists
 	# make these into non rarity based lootboxes which instead have a few rare items and mostly less rare items.
 	random_loot_inv1 = [] # common
 	random_loot_inv1_1 = [] # common and special recipe box

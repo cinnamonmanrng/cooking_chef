@@ -1,3 +1,11 @@
+Build 24.1 / Windows:
+
+- Changed: Save files will now be generated and stored in "Saves" folder inside the main game folder, creates less clutter overall.
+- Changed: Cleared some unused files in the game folder
+- Fixed: Visual bug when trying to delete a save file from an empty slot where the notification colour of the message "Save file slot (2 or 3) is empty" would fill every bit of text with the same colour.
+- Added: Logging system that stores log files in "Logs" folder, creates log entries of specific events and errors that are used for reference in case there is a bug needing a fix.
+- Added: More recipes, items and lootboxes for qualities 0 to 2
+
 Build 24 / Windows:
 
 - Changed: player's status will now be printed through the main function opposed to using the level up function, this avoids double printing it after finishing a recipe

@@ -16,6 +16,32 @@ import pickle
 import importlib
 from inspect import isfunction
 import logging
+from logging.handlers import RotatingFileHandler
+
+logging_enabled = True # starts with logging enabled, used for option to turn off logging in later statements.
+
+def toggle_logging(enable=True): # controls enabling and disabling the logging mechanic
+	global logging_enabled
+	logging_enabled = enable
+
+def logging_setup():
+	log_file = os.path.join("Logs", "chefgame.log")
+
+	handler = RotatingFileHandler(log_file, maxBytes=500 * 1024, backupCount=2)
+
+	logging.basicConfig(
+			level=logging.INFO,
+			format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+			handlers=[handler]
+		)
+
+def log_message(message, level=logging.INFO): # function that can be called to create a log message in the specified file
+	if logging_enabled:
+		logging.log(level, message)
+
+toggle_logging()
+logging_setup()
+log_message("Logging initalised - GameVer=24.1", level=logging.INFO)
 
 def progress_bar(recipe):
 	for i in range(1, recipe.timer + 1):
@@ -131,22 +157,27 @@ def timer(player, recipe, equipment, equip_use_select):
 		else:
 			player.spaghetti_cooked += 0
 
-	print(recipe.name, "Has started cooking:", recipe.timer)		
+	print(recipe.name, "Has started cooking:", recipe.timer)
+	log_message(f"Player cooking {recipe.name} for {recipe.timer}", level=logging.INFO)		
 	progress_bar(recipe)
 	print("\n", recipe.name, "Has finished cooking, you have gained:", recipe.exp_value, "XP!")
+	log_message(f"Player cooked {recipe.name} and got {recipe.exp_value}", level=logging.INFO)
 	player.experience += recipe.exp_value
 	recipe.quantity -= 1
 
 	multiple_recipe_cooks()
 
 	equip_use_select = False
+	log_message("equip_use_select was reset", level=logging.INFO)
 
 	if recipe.quantity <= 0:
 		player.player_inventory.remove(recipe)
+		log_message(f"{recipe} removed from player", level=logging.INFO)
 
 	random_lootbox(recipe, player)
 	if random.random() < double_lootbox_chance:
 		random_lootbox(recipe, player)
+		log_message("Player got double_lootbox_chance", level=logging.INFO)
 	else:
 		pass
 
@@ -178,13 +209,24 @@ def timer(player, recipe, equipment, equip_use_select):
 			"rec022": {"timer": 20, "exp_value": 35*20},
 			"rec023": {"timer": 12, "exp_value": 35*12},
 			"rec024": {"timer": 17, "exp_value": 35*17},
-			"rec025": {"timer": 15, "exp_value": 35*15}
+			"rec025": {"timer": 15, "exp_value": 35*15},
+			"rec026": {"timer": 8, "exp_value": 25*8},
+			"rec027": {"timer": 7, "exp_value": 25*7},
+			"rec028": {"timer": 4, "exp_value": 25*4},
+			"rec029": {"timer": 10, "exp_value": 35*10},
+			"rec030": {"timer": 9, "exp_value": 35*9},
+			"rec031": {"timer": 13, "exp_value": 35*13},
+			"rec032": {"timer": 20, "exp_value": 50*20},
+			"rec033": {"timer": 15, "exp_value": 50*15},
+			"rec034": {"timer": 30, "exp_value": 50*30}
 		}
 
 		if unique_id in recipe_id_dict:
 			return recipe_id_dict[unique_id]
 		else:
 			return None
+
+		log_message("Recipe ID got", level=logging.INFO)
 
 	recipe_check = get_recipe(unique_id)
 	if recipe_check is not None:
@@ -197,11 +239,13 @@ def open_lootbox(player):
 		print("\033[33;1mNew recipe gained!!\033[0m")
 		loot_item.print_info()
 		player.player_inventory.append(loot_item)
+		log_message(f"Player got recipe: {loot_item}", level=logging.INFO)
 
 	def add_to_equip(loot_item):
 		print("\033[33;1mNew item gained!!\033[0m")
 		loot_item.print_equip_info()
 		player.player_equip_inv.append(loot_item)
+		log_message(f"Player got item: {loot_item}", level=logging.INFO)
 
 	loot_list = LootBox.loot_inv
 
@@ -212,11 +256,13 @@ def open_lootbox(player):
 		if loot_open_input.upper() == "Y":
 				for index, lootbox in enumerate(loot_list, 1):
 					print(index, f"{lootbox.name}")
+					log_message("Lootbox menu init", level=logging.INFO)
 				try:
 					select_box = int(input("Select your lootbox: "))
 					lootbox = loot_list[select_box-1]
 				except ValueError as error:
 					print("Incorrect Selection, please try again")
+					log_message("Player selected invalid value in loot_open_input", level=logging.INFO)
 					return open_lootbox(player)
 
 				lootbox_dict = {
@@ -227,7 +273,9 @@ def open_lootbox(player):
 					"lb005": (Recipe.lootbox1_3_inv),
 					"lb006": (Recipe.lootbox2_inv),
 					"lb007": (Equipment.equipbox2_inv),
-					"lb008": (Recipe.lootbox2_1_inv)
+					"lb008": (Recipe.lootbox2_1_inv),
+					"lb009": (Recipe.lootbox3_inv),
+					"lb010": (Equipment.equipbox3_inv)
 				}
 				loot_random_item = lootbox_dict.get(lootbox.unique_id, (None))
 
@@ -245,9 +293,9 @@ def open_lootbox(player):
 				else:
 					pass
 
-				if lootbox.unique_id == "lb001" or lootbox.unique_id == "lb002" or lootbox.unique_id == "lb004" or lootbox.unique_id == "lb005" or lootbox.unique_id == "lb006" or lootbox.unique_id == "lb008":
+				if lootbox.unique_id == "lb001" or lootbox.unique_id == "lb002" or lootbox.unique_id == "lb004" or lootbox.unique_id == "lb005" or lootbox.unique_id == "lb006" or lootbox.unique_id == "lb008" or lootbox.unique_id == "lb009":
 					add_to_recipe(loot_item)
-				elif lootbox.unique_id == "lb003" or lootbox.unique_id == "lb007":
+				elif lootbox.unique_id == "lb003" or lootbox.unique_id == "lb007" or lootbox.unique_id == "lb010":
 					add_to_equip(loot_item)
 
 				lootbox.quantity -= 1
@@ -255,6 +303,7 @@ def open_lootbox(player):
 					lootbox.loot_inv.remove(lootbox)
 		elif loot_open_input.upper() == "N":
 			print("\033[43mLootBox™ not opened!\033[0m")
+			log_message("Player quit lootbox opening", level=logging.INFO)
 			pass
 		else:
 			print("Invalid input, Please try again!")
@@ -269,6 +318,7 @@ def player_level_up(player):
 			player.max_xp = 4500
 			player.next_level = 2
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 1", level=logging.INFO)
 		else:
 			pass
 
@@ -278,6 +328,7 @@ def player_level_up(player):
 			player.max_xp = 7000
 			player.next_level = 3
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 2", level=logging.INFO)
 		else:
 			pass
 
@@ -287,6 +338,7 @@ def player_level_up(player):
 			player.max_xp = 12500
 			player.next_level = 4
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 3", level=logging.INFO)
 		else:
 			pass
 
@@ -296,6 +348,7 @@ def player_level_up(player):
 			player.max_xp = 20000
 			player.next_level = 5
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 4", level=logging.INFO)
 		else:
 			pass
 
@@ -305,6 +358,7 @@ def player_level_up(player):
 			player.max_xp = 40000
 			player.next_level = 6
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 5", level=logging.INFO)
 		else:
 			pass
 
@@ -314,6 +368,7 @@ def player_level_up(player):
 			player.max_xp = 60000
 			player.next_level = 7
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 6", level=logging.INFO)
 		else:
 			pass
 
@@ -323,6 +378,7 @@ def player_level_up(player):
 			player.max_xp = 90000
 			player.next_level = 8
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 7", level=logging.INFO)
 		else:
 			pass
 
@@ -332,6 +388,7 @@ def player_level_up(player):
 			player.max_xp = 120000
 			player.next_level = 9
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 8", level=logging.INFO)
 		else:
 			pass
 
@@ -341,6 +398,7 @@ def player_level_up(player):
 			player.max_xp = 175000
 			player.next_level = 10
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 9", level=logging.INFO)
 		else:
 			pass
 
@@ -350,10 +408,11 @@ def player_level_up(player):
 			player.max_xp = "MAX"
 			player.next_level = "MAX"
 			print("\033[45;1mYour rating has increased!!\033[0m")
+			log_message("Level increased to 10", level=logging.INFO)
 		else:
 			pass
 
-	elif player.level == 10:
+	elif player.level == 4:
 		player.max_xp = "MAX"
 		player.next_level = "MAX"
 
@@ -363,16 +422,18 @@ def add_to_loot(boxluck, boxluck_eq):
 		boxluck.loot_print_info()
 		beq = boxluck
 		LootBox.loot_inv.append(beq)
+		log_message("Player gained rec lootbox", level=logging.INFO)
 		if boxluck_eq != None:
 			print("\033[33;1mNew LootBox™ gained!!\033[0m")
 			boxluck_eq.loot_print_info()
 			beq_eq = boxluck_eq
 			LootBox.loot_inv.append(beq_eq)
+			log_message("Player gained eq lootbox", level=logging.INFO)
 		boxluck = None
 		boxluck_eq = None
 	except Exception as error:
 		print("Random Lootbox function failed, please see the log file for details")
-		logging.exception(error)
+		log_message(error, level=logging.INFO)
 
 def random_lootbox(recipe, player):
 	random_loot_boxes = {
@@ -392,7 +453,7 @@ def random_lootbox(recipe, player):
 	random_box, random_box_eq = random_loot_boxes.get(player.level, (None, None)) # needs rework to be player.level
 
 	if random_box is None or random_box_eq is None:
-		print("Invalid Player Level!!")
+		log_message("Invalid player level for random_box / random_box_eq", level=logging.INFO)
 		return
 
 	boxluck = random_box[random.randint(0, len(random_box) - 1)]
@@ -411,6 +472,7 @@ def random_lootbox(recipe, player):
 		boxluck_eq = None
 
 	add_to_loot(boxluck, boxluck_eq)
+	log_message("add_to_loot called", level=logging.INFO)
 	
 
 def cooking_input(player):
@@ -474,6 +536,7 @@ def sell_item(player):
 	print("1 - Sell recipes")
 	print("2 - Go back")
 	try:
+		log_message("Sell recipes initalised", level=logging.INFO)
 		player_selection = int(input("What would you like to do?: "))
 	except ValueError:
 		print("\033[43mSelection was invalid, please try again!\033[0m")
@@ -483,6 +546,7 @@ def sell_item(player):
 			for index, recipe in enumerate(player.player_inventory, 1):
 				xpvalue = recipe.exp_value // 5
 				print(index, f"{recipe.name} XP gained from selling this recipe: {xpvalue}")
+				log_message("Recipe list printed for player in sell_item", level=logging.INFO)
 			try:
 				rec_del_select = int(input("Which recipe would you like to sell?: "))
 			except ValueError:
@@ -494,14 +558,17 @@ def sell_item(player):
 				print("You gained: " + f"\033[32;1m+{xpvalue}\033[0m " + "XP!" )
 				if recipe.quantity <= 0:
 					player.player_inventory.remove(recipe)
+				log_message(f"player sold {recipe} for {xpvalue}", level=logging.INFO)	
 			elif rec_del_select <= 0:
 				print("Your selection is invalid, please try again!")
 				return sell_item(player)
 		elif len(player.player_inventory) <= 0:
 			print("\033[43mYou have no recipes to choose from!\033[0m")
 			return sell_item(player)
+			log_message("Player returned due to empty inv", level=logging.INFO)
 	elif player_selection == 2:
 		return
+		log_message("Player voluntarily exited sell_item", level=logging.INFO)
 
 def claim_lootbox(player):
 	if len(player.player_inventory) <= 0 and len(LootBox.loot_inv) <= 0:
@@ -509,6 +576,7 @@ def claim_lootbox(player):
 		print("\033[33;1mNew LootBox™ gained!!")
 		LootBox.loot_inv.append(lootbox1)
 		lootbox1.loot_print_info()
+		log_message("Player recieved claim_lootbox", level=logging.INFO)
 		return
 
 def save_game(player):
@@ -516,7 +584,7 @@ def save_game(player):
 
 	chef = player.name, player.level, player.experience, player.max_xp, player.next_level, player.player_inventory, player.player_equip_inv, LootBox.loot_inv, spc_recipes
 
-	file_name = "chef_1.pkl"
+	file_name = "Saves/chef_1.pkl"
 	if os.path.exists(file_name):
 		print("\033[43mSave file in slot 1 already exists!\033[0m")
 
@@ -529,6 +597,7 @@ def save_game(player):
 			with open(file_name, "wb") as file:
 				pickle.dump(chef, file)				
 				print("\033[42mFile saved successfully to slot 1\033[0m")
+				log_message("Save slot 1 overwritten by player", level=logging.INFO)
 		elif save_input == 2:
 			print("1. Save Slot 2")
 			print("2. Save Slot 3")
@@ -540,45 +609,51 @@ def save_game(player):
 				return save_game(player)
 
 			if new_save_input == 0:
-				if os.path.exists("chef_2.pkl"):
+				if os.path.exists("Saves/chef_2.pkl"):
 					print("\033[43mSave file in slot 2 already exists!\033[0m")
 					overwrite_2 = input("Do you want to overwrite the save in slot 2? (Y/N): ")
 					if overwrite_2.upper() == "Y":
-						with open("chef_2.pkl", "wb") as file:
+						with open("Saves/chef_2.pkl", "wb") as file:
 							pickle.dump(chef, file)					
 							print("\033[42mGame saved successfully to slot 2\033[0m")
+							log_message("Game save overwritten to slot 2 by player", level=logging.INFO)
 					elif overwrite_2.upper() == "N":
 						print("\033[43mSave slot 2 not overwritten!\033[0m")
+						log_message("Game save overwrite denied by player to slot 2", level=logging.INFO)
 						return save_game(player)
 					else:
 						print("Invalid selection, please try again!")
 						return save_game(player)
-				elif not os.path.exists("chef_2.pkl"):
-					with open("chef_2.pkl", "wb") as file:
+				elif not os.path.exists("Saves/chef_2.pkl"):
+					with open("Saves/chef_2.pkl", "wb") as file:
 						pickle.dump(chef, file)
-						print("\033[42mGame saved successfully to slot 2\033[0m")	
+						print("\033[42mGame saved successfully to slot 2\033[0m")
+						log_message("Game saved to slot 2 by player", level=logging.INFO)	
 
 			elif new_save_input == 1:
-				if os.path.exists("chef_3.pkl"):
+				if os.path.exists("Saves/chef_3.pkl"):
 					print("\033[43mSave file in slot 3 already exists!\033[0m")
 					overwrite_3 = input("Do you want to overwrite the save in slot 3? (Y/N): ")
 					if overwrite_3.upper() == "Y":
-						with open("chef_3.pkl", "wb") as file:
+						with open("Saves/chef_3.pkl", "wb") as file:
 							pickle.dump(chef, file)				
 							print("\033[42mGame saved successfully to slot 3\033[0m")
+							log_message("Game overwritten to slot 3 by player", level=logging.INFO)
 					elif overwrite_3.upper() == "N":
 						print("\033[43mSave slot 3 not overwritten!\033[0m")
 						return save_game(player)
 					else:
 						print("Invalid selection, please try again!")
 						return save_game(player)
-				elif not os.path.exists("chef_3.pkl"):
-					with open("chef_3.pkl", "wb") as file:
+				elif not os.path.exists("Saves/chef_3.pkl"):
+					with open("Saves/chef_3.pkl", "wb") as file:
 						pickle.dump(chef, file)
 						print("\033[42mGame saved successfully to slot 3\033[0m")	
+						log_message("Game saved to slot 3 by player", level=logging.INFO)
 
 			elif new_save_input == 2:
 				print("\033[43mGame not saved!!\033[0m")
+				log_message("Game not saved by player", level=logging.INFO)
 				pass
 		else:
 			print("Invalid input, please try again!")
@@ -590,41 +665,43 @@ def save_game(player):
 			with open(file_name, "wb") as file:
 				pickle.dump(chef, file)
 				print("\033[42mFile saved successfully to slot 1\033[0m")
+				log_message("Game saved to slot 1 by player", level=logging.INFO)
 		elif ask_to_save.upper() == "N":
 			print("\033[43mPlayer data not saved!\033[0m")
+			log_message("Game save denied by player to slot 1", level=logging.INFO)
 			pass
 		else:
 			print("Invalid input, please try again!")
 			save_game(player)
 
 def load_game(player):
-	if not os.path.exists("chef_1.pkl"):
+	if not os.path.exists("Saves/chef_1.pkl"):
 		print("1 - Save Slot 1 - Empty")
 
-	if os.path.exists("chef_1.pkl"):
-		with open("chef_1.pkl", "rb") as menufile:
+	if os.path.exists("Saves/chef_1.pkl"):
+		with open("Saves/chef_1.pkl", "rb") as menufile:
 			load1 = pickle.load(menufile)
 			load1_list = list(load1)
 			player.name, player.level, player.experience = load1[:3]
 			print("1 - Save Slot 1 - " + f"{player.name} " + f"| Rating: {player.get_load_star()} " + "| XP: " + f"{player.experience}")
 			menufile.close()
 
-	if not os.path.exists("chef_2.pkl"):
+	if not os.path.exists("Saves/chef_2.pkl"):
 		print("2 - Save Slot 2 - Empty")
 
-	if os.path.exists("chef_2.pkl"):
-		with open("chef_2.pkl", "rb") as menufile:
+	if os.path.exists("Saves/chef_2.pkl"):
+		with open("Saves/chef_2.pkl", "rb") as menufile:
 			load2 = pickle.load(menufile)
 			load2_list = list(load2)
 			player.name, player.level, player.experience = load2[:3]
 			print("2 - Save Slot 2 - " + f"{player.name} " + f"| Rating: {player.get_load_star()} " + "| XP: " + f"{player.experience}")
 			menufile.close()
 
-	if not os.path.exists("chef_3.pkl"):
+	if not os.path.exists("Saves/chef_3.pkl"):
 		print("3 - Save Slot 3 - Empty")
 
-	if os.path.exists("chef_3.pkl"):
-		with open("chef_3.pkl", "rb") as menufile:
+	if os.path.exists("Saves/chef_3.pkl"):
+		with open("Saves/chef_3.pkl", "rb") as menufile:
 			load3 = pickle.load(menufile)
 			load3_list = list(load3)
 			player.name, player.level, player.experience = load3[:3]
@@ -640,8 +717,8 @@ def load_game(player):
 		return load_game(player)
 
 	if ask_save_load == 1:
-		if os.path.exists("chef_1.pkl"):
-			with open("chef_1.pkl", "rb") as file:
+		if os.path.exists("Saves/chef_1.pkl"):
+			with open("Saves/chef_1.pkl", "rb") as file:
 				import1 = pickle.load(file)
 				import1_list = list(import1)
 				player.name, player.level, player.experience, player.max_xp, player.next_level = import1[:5]
@@ -656,12 +733,13 @@ def load_game(player):
 				player.tomatosauce_cooked = spc_recipes[1]
 				player.spaghetti_cooked = spc_recipes[2]
 			print("Save slot 1 loaded successfully!")
+			log_message("Save file loaded from slot 1 by player", level=logging.INFO)
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 2:
-		if os.path.exists("chef_2.pkl"):
-			with open("chef_2.pkl", "rb") as file:
+		if os.path.exists("Saves/chef_2.pkl"):
+			with open("Saves/chef_2.pkl", "rb") as file:
 				import2 = pickle.load(file)
 				import2_list = list(import2)
 				player.name, player.level, player.experience, player.max_xp, player.next_level = import2[:5]
@@ -676,12 +754,13 @@ def load_game(player):
 				player.tomatosauce_cooked = spc_recipes[1]
 				player.spaghetti_cooked = spc_recipes[2]
 			print("Save slot 2 loaded successfully!")
+			log_message("Save file loaded from slot 2 by player", level=logging.INFO)
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
 	elif ask_save_load == 3:
-		if os.path.exists("chef_3.pkl"):
-			with open("chef_3.pkl", "rb") as file:
+		if os.path.exists("Saves/chef_3.pkl"):
+			with open("Saves/chef_3.pkl", "rb") as file:
 				import3 = pickle.load(file)
 				import3_list = list(import3)
 				player.name, player.level, player.experience, player.max_xp, player.next_level = import3[:5]
@@ -695,7 +774,8 @@ def load_game(player):
 				player.meatballs_cooked = spc_recipes[0]
 				player.tomatosauce_cooked = spc_recipes[1]
 				player.spaghetti_cooked = spc_recipes[2]
-			print("Save slot 3 loaded successfully!")				
+			print("Save slot 3 loaded successfully!")
+			log_message("Save file loaded from slot 3 by player", level=logging.INFO)				
 		else:
 			print("Save slot is empty, please try again!")
 			return load_game(player)
@@ -709,28 +789,31 @@ def load_game(player):
 		delete_save_inp = int(input("Choose your option: "))
 
 		if delete_save_inp == 1:
-			if os.path.exists("chef_1.pkl"):
-				os.remove("chef_1.pkl")
+			if os.path.exists("Saves/chef_1.pkl"):
+				os.remove("Saves/chef_1.pkl")
 				print("\033[43mSave file in slot 1 has been removed successfully!\033[0m")
+				log_message("Save slot 1 deleted by player", level=logging.INFO)
 				return load_game(player)
-			elif not os.path.exists("chef_1.pkl"):
-				print("\033[43mSave slot 1 is empty!")
+			elif not os.path.exists("Saves/chef_1.pkl"):
+				print("\033[43mSave slot 1 is empty!\033[0m")
 				return load_game(player)
 		elif delete_save_inp == 2:
-			if os.path.exists("chef_2.pkl"):
-				os.remove("chef_2.pkl")
+			if os.path.exists("Saves/chef_2.pkl"):
+				os.remove("Saves/chef_2.pkl")
 				print("\033[43mSave file in slot 2 has been removed successfully!\033[0m")
+				log_message("Save slot 2 deleted by player", level=logging.INFO)
 				return load_game(player)
-			elif not os.path.exists("chef_2.pkl"):
-				print("\033[43mSave slot 2 is empty!")
+			elif not os.path.exists("Saves/chef_2.pkl"):
+				print("\033[43mSave slot 2 is empty!\033[0m")
 				return load_game(player)
 		elif delete_save_inp == 3:
-			if os.path.exists("chef_3.pkl"):
-				os.remove("chef_3.pkl")
+			if os.path.exists("Saves/chef_3.pkl"):
+				os.remove("Saves/chef_3.pkl")
 				print("\033[43mSave file in slot 3 has been removed successfully!\033[0m")
+				log_message("Save slot 3 deleted by player", level=logging.INFO)
 				return load_game(player)
-			elif not os.path.exists("chef_3.pkl"):
-				print("\033[43mSave slot 3 is empty!")
+			elif not os.path.exists("Saves/chef_3.pkl"):
+				print("\033[43mSave slot 3 is empty!\033[0m")
 				return load_game(player)
 		elif delete_save_inp == 4:
 			return load_game(player)
