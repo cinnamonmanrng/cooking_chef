@@ -109,16 +109,64 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment = None
 			return equip_use_select, equipment
 
+
+		if recipe.unique_id == "rec030" and equipment.unique_id == "eq011":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id == "rec030" and equipment.unique_id == "eq011":
+			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		if recipe.unique_id == "rec031" and equipment.unique_id == "eq012":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id == "rec034" and equipment.unique_id == "eq012":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id == "rec031" and equipment.unique_id == "eq012":
+			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+		elif recipe.unique_id == "rec034" and equipment.unique_id == "eq012":
+			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
+		if recipe.unique_id == "rec032" and equipment.unique_id == "eq015":
+			recipe.timer -= equipment.effect
+			print(f"{equipment.name} Has been used!")
+			equipment.quantity -= 1
+			if equipment.quantity <= 0:
+				player.player_equip_inv.remove(equipment)
+		elif recipe.unique_id == "rec032" and equipment.unique_id == "eq015":
+			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+
 # general items (work with any recipe)
 
-		if equipment.unique_id == "eq002" or equipment.unique_id == "eq005":
+		if equipment.unique_id == "eq002" or equipment.unique_id == "eq005" or equipment.unique_id == "eq009" or equipment.unique_id == "eq013" or equipment.unique_id == "eq017":
 			recipe.timer -= equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
 
-		if equipment.unique_id == "eq001" or equipment.unique_id == "eq006":
+		if equipment.unique_id == "eq001" or equipment.unique_id == "eq006" or equipment.unique_id == "eq008" or equipment.unique_id == "eq010" or equipment.unique_id == "eq014" or equipment.unique_id == "eq016":
 			recipe.exp_value += equipment.effect
 			print(f"{equipment.name} Has been used!")
 			equipment.quantity -= 1
@@ -264,6 +312,10 @@ def open_lootbox(player):
 					print("Incorrect Selection, please try again")
 					log_message("Player selected invalid value in loot_open_input", level=logging.INFO)
 					return open_lootbox(player)
+				except IndexError as error:
+					print("Incorrect Selection, please try again")
+					log_message("Player caused IndexError in loot_open_input", level=logging.INFO)
+					return open_lootbox(player)
 
 				lootbox_dict = {
 					"lb001": (Recipe.lootbox1_inv),
@@ -287,9 +339,10 @@ def open_lootbox(player):
 				Recipe.unique_id = loot_random_item[0].unique_id
 
 				if len(player.player_inventory) > 0:
-					if player.player_inventory[0] == Recipe.unique_id == "rec010" and player.player_inventory == 1:
-						loot_random_item = None
-						return open_lootbox(player)
+					if player.player_inventory[0].unique_id == "rec010":
+						if len(player.player_inventory) == 1:
+							loot_random_item = None
+							return open_lootbox(player)
 				else:
 					pass
 
@@ -412,7 +465,7 @@ def player_level_up(player):
 		else:
 			pass
 
-	elif player.level == 4:
+	elif player.level == 10:
 		player.max_xp = "MAX"
 		player.next_level = "MAX"
 
@@ -438,19 +491,19 @@ def add_to_loot(boxluck, boxluck_eq):
 def random_lootbox(recipe, player):
 	random_loot_boxes = {
 		0: (LootBox.random_loot_inv1, LootBox.random_looteq_inv1),
-		1: (LootBox.random_loot_inv1_1, LootBox.random_looteq_inv1_1),
+		1: (LootBox.random_loot_inv1, LootBox.random_looteq_inv1),
 		2: (LootBox.random_loot_inv2, LootBox.random_looteq_inv2),
-		3: (LootBox.random_loot_inv2_1, LootBox.random_looteq_inv2_1),
+		3: (LootBox.random_loot_inv2, LootBox.random_looteq_inv2),
 		4: (LootBox.random_loot_inv3, LootBox.random_looteq_inv3),
-		5: (LootBox.random_loot_inv3_1, LootBox.random_looteq_inv3_1),
+		5: (LootBox.random_loot_inv3, LootBox.random_looteq_inv3),
 		6: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
-		7: (LootBox.random_loot_inv4_1, LootBox.random_looteq_inv4_1),
+		7: (LootBox.random_loot_inv4, LootBox.random_looteq_inv4),
 		8: (LootBox.random_loot_inv5, LootBox.random_looteq_inv5),
-		9: (LootBox.random_loot_inv5_1, LootBox.random_looteq_inv5_1),
+		9: (LootBox.random_loot_inv5, LootBox.random_looteq_inv5),
 		10: (LootBox.random_loot_inv6, LootBox.random_looteq_inv6)
 	}
 
-	random_box, random_box_eq = random_loot_boxes.get(player.level, (None, None)) # needs rework to be player.level
+	random_box, random_box_eq = random_loot_boxes.get(player.level, (None, None))
 
 	if random_box is None or random_box_eq is None:
 		log_message("Invalid player level for random_box / random_box_eq", level=logging.INFO)
@@ -472,7 +525,7 @@ def random_lootbox(recipe, player):
 		boxluck_eq = None
 
 	add_to_loot(boxluck, boxluck_eq)
-	log_message("add_to_loot called", level=logging.INFO)
+	log_message("add_to_loot called with boxluck_eq", level=logging.INFO)
 	
 
 def cooking_input(player):

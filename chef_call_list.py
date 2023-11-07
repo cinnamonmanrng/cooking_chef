@@ -113,7 +113,7 @@ Equipment.equipbox1_inv.append(equip7)
 # quality 1
 Equipment.equipbox2_inv.append(equip8)
 Equipment.equipbox2_inv.append(equip9)
-Equipment.equipbox2_inv.append(equip10)
+# Equipment.equipbox2_inv.append(equip10)
 Equipment.equipbox2_inv.append(equip11)
 Equipment.equipbox2_inv.append(equip12)
 # quality 2
@@ -136,10 +136,10 @@ Recipe.lootbox1_1_inv.append(recipe5)
 Recipe.lootbox1_1_inv.append(recipe7)
 Recipe.lootbox1_1_inv.append(recipe8)
 Recipe.lootbox1_1_inv.append(recipe9)
-Recipe.lootbox1_1_inv.append(recipe10)
+# Recipe.lootbox1_1_inv.append(recipe10)
 Recipe.lootbox1_1_inv.append(recipe27)
 # alt 2 quality 0
-Recipe.lootbox1_1_inv.append(recipe11)
+Recipe.lootbox1_2_inv.append(recipe11)
 Recipe.lootbox1_2_inv.append(recipe12)
 Recipe.lootbox1_2_inv.append(recipe13)
 Recipe.lootbox1_2_inv.append(recipe14)
@@ -176,14 +176,14 @@ LootBox.random_loot_inv1.append(lootbox1)
 LootBox.random_loot_inv1.append(lootbox2)
 LootBox.random_loot_inv1.append(lootbox4)
 # quality 0, special recipe
-LootBox.random_loot_inv1_1.append(lootbox5)
+LootBox.random_loot_inv1.append(lootbox5)
 # quality 0 / 1
 LootBox.random_loot_inv2.append(lootbox5)
 LootBox.random_loot_inv2.append(lootbox2)
 LootBox.random_loot_inv2.append(lootbox4)
 LootBox.random_loot_inv2.append(lootbox6)
 # quality 1 
-LootBox.random_loot_inv2_1.append(lootbox6)
+LootBox.random_loot_inv2.append(lootbox6)
 # quality 2
 LootBox.random_loot_inv3.append(lootbox9)
 

@@ -5,6 +5,20 @@ import time
 from chef_func import *
 import subprocess
 import importlib
+import os
+import sys
+
+if getattr(sys, 'frozen', False):
+	# running as a compiled exe
+	log_message("Using MEIPASS", level=logging.INFO)
+	base_dir = sys._MEIPASS
+else:
+	# running as a script
+	log_message("Using SCRIPT", level=logging.INFO)
+	base_dir = os.path.abspath(os.path.dirname(__file__))
+
+log_folder = os.path.join(base_dir, "Logs")
+save_folder = os.path.join(base_dir, "Saves")
 
 try:
 	importlib.import_module('keyboard')
@@ -19,7 +33,7 @@ except ImportError:
 
 import keyboard
 
-version_id = "\033[35;1mbuild:24.1 / date:07/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;1mbuild:25 / date:07/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():

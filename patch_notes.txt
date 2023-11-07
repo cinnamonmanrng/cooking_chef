@@ -1,3 +1,15 @@
+Build 25 / Windows:
+
+- Added: There is now an installer that installs the game and python dependencies needed by the game for the user.
+- Fixed: Issue where you could cause an IndexError by picking a number out of the range of options when choosing what LootBox to open.
+- Fixed: Issue where in some cases after the player gains a rating higher than 0 the game would set the random item box list to be empty so it cannot be accessed by random lootbox and would crash the game.
+- Fixed: A small bug where if the player got to ratings 1 - 3 - 5 - 7 - 9, the game would give you the same lootboxes over and over again until the next rating.
+- Changed: Special Recipes are temporarily removed due to 3 different issues with one special recipe, will be added back when I can figure out a fix for it.
+- Current issues known and fixed in next update: 
+1. Special recipes get given to players even when the player has no more recipes to cook, the best thing you can do to counteract this is to sell that recipe and claim the inventory empty lootbox from the main menu (you will see it once your inventory is empty of lootboxes)
+2. Special recipes have their ingredients count reduced regardless of whether it gets cooked or not, so when you use an item that cannot be used on a special recipe, you will also lose the ingredients used for that recipe, this can be annoying but the easiest way to counteract this is to make sure you don't use items that can only be used on specific recipes on the currently available special recipe (spaghetti and meatballs in tomato sauce)
+3. Also a weird small bug with special recipes where if you gain a special recipe it for some reason doesn't let you open lootboxes until you sell that special recipe. working on a fix for next build.
+
 Build 24.1 / Windows:
 
 - Changed: Save files will now be generated and stored in "Saves" folder inside the main game folder, creates less clutter overall.
