@@ -8,23 +8,7 @@ Python: Python 3.8 or later
 No other requirements
 </br>
 ## Installing Python:
-In order for the game to work, your system needs to have Python 3 installed.
-</br>
-### To do this on Windows 10 or later, here are some steps you can use to install Python 3 on your system:
-- Navigate to Microsoft Store on your PC
-- Search for "Python"
-- Search results should show up with different releases of python. <b>(For the best results, download the latest version of Python 3.10)</b>
-- Once it has finished, you should be able to execute the game.bat file in order to start the game!
-- To check what version your python is on and if it installed correctly you can follow these steps:
-  - Open powershell("Terminal" in Windows 11) or Command prompt in administrator mode
-  - Write "python3 --version" within the prompt
-### To do this on Windows 8 or below, Follow these steps to install Python 3:
-- Navigate to [Python Downloads](https://www.python.org/downloads/windows/)
-- Select your desired Python version <b>(For the best results use the latest version of Python 3.10)</b>
-- Follow the installation instructions once your installer has downloaded
-- To check what version your python is on and if it installed correctly you can follow these steps:
-  - Open powershell or Command prompt in administrator mode
-  - Write "python3 --version" within the prompt
+Because of the change to a dedicated installer and exe file in Build 25, the game should no longer require you to install python 3 manually.
 ## Issues or enquiries:
 If you have any enquiries, submit them to: cookingchefgame@gmail.com or ask within [Cooking Chef Discord](https://discord.gg/CFQdynhFNd)
 </br>
@@ -32,6 +16,16 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 25 / Windows:
+- Added: There is now an installer that installs the game and python dependencies needed by the game for the user.
+- Fixed: Issue where you could cause an IndexError by picking a number out of the range of options when choosing what LootBox to open.
+- Fixed: Issue where in some cases after the player gains a rating higher than 0 the game would set the random item box list to be empty so it cannot be accessed by random lootbox and would crash the game.
+- Fixed: A small bug where if the player got to ratings 1 - 3 - 5 - 7 - 9, the game would give you the same lootboxes over and over again until the next rating.
+- Changed: Special Recipes are temporarily removed due to 3 different issues with one special recipe, will be added back when I can figure out a fix for it.
+- Current issues known and fixed in next update: 
+1. Special recipes get given to players even when the player has no more recipes to cook, the best thing you can do to counteract this is to sell that recipe and claim the inventory empty lootbox from the main menu (you will see it once your inventory is empty of lootboxes)
+2. Special recipes have their ingredients count reduced regardless of whether it gets cooked or not, so when you use an item that cannot be used on a special recipe, you will also lose the ingredients used for that recipe, this can be annoying but the easiest way to counteract this is to make sure you don't use items that can only be used on specific recipes on the currently available special recipe (spaghetti and meatballs in tomato sauce)
+3. Also a weird small bug with special recipes where if you gain a special recipe it for some reason doesn't let you open lootboxes until you sell that special recipe. working on a fix for next build.
 ### Build 24.1 / Windows
 - Changed: Save files will now be generated and stored in "Saves" folder inside the main game folder, creates less clutter overall.
 - Changed: Cleared some unused files in the game folder
@@ -65,8 +59,5 @@ If you encounter issues with the game or need technical support, submit these to
 - Added a 16 character limit when entering a name for player
 - Added a progress bar display when cooking a recipe
 - Added a mechanic that allows the player to sell recipes for 1/4th of the xp value of that recipe
-### Build 22.1 / Windows
-- Fixed a bug that caused all items to be unusable unless they were items specific to a specific recipe
-- Added all recipe, item and lootbox instances to chef_call_list
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
