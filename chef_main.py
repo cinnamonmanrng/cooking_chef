@@ -19,7 +19,7 @@ except ImportError:
 
 import keyboard
 
-version_id = "\033[35;1mbuild:24.1 / date:05/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;1mbuild:24.1 / date:07/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():
