@@ -27,7 +27,12 @@ def toggle_logging(enable=True): # controls enabling and disabling the logging m
 def logging_setup():
 	log_file = os.path.join("Logs", "chefgame.log")
 
-	handler = RotatingFileHandler(log_file, maxBytes=500 * 1024, backupCount=2)
+	try:
+		handler = RotatingFileHandler(log_file, maxBytes=500 * 1024, backupCount=2)
+	except PermissionError as permerror:
+		# log_message("Errno 13, no permission to write to chefgame.log")
+		print("Logging will disabled due to a permission error")
+		logging_enabled = False
 
 	logging.basicConfig(
 			level=logging.INFO,

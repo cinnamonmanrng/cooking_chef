@@ -1,3 +1,8 @@
+Build 25.1 / Windows:
+
+- Fixed: Issue where chefgame.log would give a permission error whenever the logging function would try to write to that file. The exception was previously unhandled so that's why the error popped up.
+- Fixed: Visual colour bug when opening options menu
+
 Build 25 / Windows:
 
 - Added: There is now an installer that installs the game and python dependencies needed by the game for the user.

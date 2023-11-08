@@ -33,7 +33,7 @@ except ImportError:
 
 import keyboard
 
-version_id = "\033[35;1mbuild:25 / date:07/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;1mbuild:25.1 / date:08/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():
@@ -403,7 +403,7 @@ def main_menu():
 	elif menu_input == 3:
 		global logging_enabled
 
-		print("\033[43mLogs will be force enabled for the time being!")
+		print("\033[43mLogs will be force enabled for the time being! (unless you had permission error)\033[0m")
 		print("No other options avaliable, returning to menu")
 		return main_menu()
 
