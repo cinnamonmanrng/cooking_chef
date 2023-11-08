@@ -16,6 +16,9 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 25.1 / Windows:
+- Fixed: Issue where chefgame.log would give a permission error whenever the logging function would try to write to that file. The exception was previously unhandled so that's why the error popped up.
+- Fixed: Visual colour bug when opening options menu
 ### Build 25 / Windows:
 - Added: There is now an installer that installs the game and python dependencies needed by the game for the user.
 - Fixed: Issue where you could cause an IndexError by picking a number out of the range of options when choosing what LootBox to open.
@@ -48,16 +51,5 @@ If you encounter issues with the game or need technical support, submit these to
 - Special Recipe: Even though you can select an item before cooking a special recipe, it will not use the item if you do not have the correct ingredients cooked to cook that recipe
 ### Build 3 / MacOS
 - Updated MacOS version to align with the windows version of the game, the changes are the same so the patch notes for the windows version are inclusive of the MacOS version.
-### Build 23 / Windows
-- Changed recipe xp rewards, it now awards players with more experience when the recipe quality is better (refer to chef_call_list for details)
-- Fixed a bug that would sometimes exit the program with an error when trying to go back before loading a saved game
-- Player level now defines what quality lootboxes the player recieves from random_lootbox
-- Changed the code in the timer function to allow for easier workability with items that have specific recipe requirements
-- Changed random_lootbox code to not take boxluck and boxluck_eq as a list
-- random_lootbox now gives a 65% chance for an item lootbox starting from player level 4 (this is mainly to balance the heavy recipe time requirements later in the game)
-- Changed the look of the progress bar in the tutorial
-- Added a 16 character limit when entering a name for player
-- Added a progress bar display when cooking a recipe
-- Added a mechanic that allows the player to sell recipes for 1/4th of the xp value of that recipe
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
