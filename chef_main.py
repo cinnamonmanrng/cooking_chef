@@ -1,4 +1,4 @@
-# text colour: print("\033[1;32;40m Bright Green  \n")
+ # text colour: print("\033[1;32;40m Bright Green  \n")
 # reset colour: print("\033[0m Hiya")
 
 import time
@@ -10,7 +10,7 @@ import sys
 
 if getattr(sys, 'frozen', False):
 	# running as a compiled exe
-	log_message("Using MEIPASS", level=logging.INFO)
+	log_message("Using APPLICATION", level=logging.INFO)
 	base_dir = sys._MEIPASS
 else:
 	# running as a script
@@ -33,7 +33,7 @@ except ImportError:
 
 import keyboard
 
-version_id = "\033[35;1mbuild:25.1 / date:08/11/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
+version_id = "\033[35;1mbuild:26 / date:01/12/2023\033[0m | Please email: ccg.issues@gmail.com or join our discord (link on github) for any issues you may encounter, Thank you!"
 
 
 def progress_bar():
@@ -403,7 +403,7 @@ def main_menu():
 	elif menu_input == 3:
 		global logging_enabled
 
-		print("\033[43mLogs will be force enabled for the time being! (unless you had permission error)\033[0m")
+		print("\033[43mLogs will be force enabled for the time being! (unless you had a permission error when entering the application)\033[0m")
 		print("No other options avaliable, returning to menu")
 		return main_menu()
 
@@ -438,4 +438,4 @@ def main_menu():
 		print("You have entered an invalid input, please try again!")
 		return main_menu()
 
-main_menu()
+main_menu() # penis defence missiles

@@ -113,7 +113,7 @@ Equipment.equipbox1_inv.append(equip7)
 # quality 1
 Equipment.equipbox2_inv.append(equip8)
 Equipment.equipbox2_inv.append(equip9)
-# Equipment.equipbox2_inv.append(equip10)
+Equipment.equipbox2_inv.append(equip10)
 Equipment.equipbox2_inv.append(equip11)
 Equipment.equipbox2_inv.append(equip12)
 # quality 2
@@ -136,7 +136,7 @@ Recipe.lootbox1_1_inv.append(recipe5)
 Recipe.lootbox1_1_inv.append(recipe7)
 Recipe.lootbox1_1_inv.append(recipe8)
 Recipe.lootbox1_1_inv.append(recipe9)
-# Recipe.lootbox1_1_inv.append(recipe10)
+Recipe.lootbox1_1_inv.append(recipe10)
 Recipe.lootbox1_1_inv.append(recipe27)
 # alt 2 quality 0
 Recipe.lootbox1_2_inv.append(recipe11)

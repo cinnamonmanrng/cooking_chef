@@ -1,3 +1,16 @@
+Build 26 / Windows:
+- Fixed: Player could get a special recipe if they had 0 items in their inventory, the code only checked for 1 or more items when it would decide whether to grant a special recipe or not.
+- Fixed: Special recipe ingredients were used when player used an incorrect item on the special recipe.
+- Fixed: Some of the new items could be used on any recipes when they were meant for specific recipes.
+- Fixed: An issue where a player could crash the game when putting in an invalid value in the sell recipes menu.
+- Fixed: Issue where the selling a recipe function would only sell the last printed recipe instead of the player's selection
+- Changed: Special Recipes are enabled
+- Changed: Selling a recipe now keeps you in the Sell Recipes menu instead of bringing you back to the main menu.
+- Changed: Slight text adjustment for options menu.
+- Changed: Application now coded and runs in Python version 12.
+- Changed: Windows 8 is no longer supported as the minimum requirement, although the game can be probably be started on windows 8 or below, future updates will not consider any system behaviours for windows 8 or below.
+
+
 Build 25.1 / Windows:
 
 - Fixed: Issue where chefgame.log would give a permission error whenever the logging function would try to write to that file. The exception was previously unhandled so that's why the error popped up.

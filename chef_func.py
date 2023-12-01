@@ -46,7 +46,7 @@ def log_message(message, level=logging.INFO): # function that can be called to c
 
 toggle_logging()
 logging_setup()
-log_message("Logging initalised - GameVer=24.1", level=logging.INFO)
+log_message("Logging initalised - GameVer=26", level=logging.INFO)
 
 def progress_bar(recipe):
 	for i in range(1, recipe.timer + 1):
@@ -69,7 +69,15 @@ def timer(player, recipe, equipment, equip_use_select):
 	elif recipe.unique_id == "rec010" and player.meatballs_cooked < 1 or player.spaghetti_cooked < 1 or player.tomatosauce_cooked < 1:
 		print("You do not have the right ingredients to cook this recipe, please cook the required recipes before cooking this one!")
 		return
-	elif recipe.unique_id == "rec010" and player.meatballs_cooked >= 1 and player.spaghetti_cooked >= 1 and player.tomatosauce_cooked >= 1:
+	
+	if equip_use_select == True and recipe.unique_id == "rec010":
+		if equipment.unique_id == "eq003" or equipment.unique_id == "eq004" or equipment.unique_id == "eq011" or equipment.unique_id == "eq012" or equipment.unique_id == "eq015":
+			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
+			equip_use_select = False
+			equipment = None
+			return equip_use_select, equipment
+	
+	if recipe.unique_id == "rec010" and player.meatballs_cooked >= 1 and player.spaghetti_cooked >= 1 and player.tomatosauce_cooked >= 1:
 		player.meatballs_cooked -= 1
 		player.spaghetti_cooked -= 1
 		player.tomatosauce_cooked -= 1
@@ -121,7 +129,7 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
-		elif recipe.unique_id == "rec030" and equipment.unique_id == "eq011":
+		elif recipe.unique_id != "rec030" and equipment.unique_id == "eq011":
 			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
@@ -139,12 +147,12 @@ def timer(player, recipe, equipment, equip_use_select):
 			equipment.quantity -= 1
 			if equipment.quantity <= 0:
 				player.player_equip_inv.remove(equipment)
-		elif recipe.unique_id == "rec031" and equipment.unique_id == "eq012":
+		elif recipe.unique_id != "rec031" and equipment.unique_id == "eq012":
 			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
 			return equip_use_select, equipment
-		elif recipe.unique_id == "rec034" and equipment.unique_id == "eq012":
+		elif recipe.unique_id != "rec034" and equipment.unique_id == "eq012":
 			print("\033[43mThis Item cannot be used for this recipe!\033[0m")
 			equip_use_select = False
 			equipment = None
@@ -343,13 +351,15 @@ def open_lootbox(player):
 
 				Recipe.unique_id = loot_random_item[0].unique_id
 
-				if len(player.player_inventory) > 0:
-					if player.player_inventory[0].unique_id == "rec010":
-						if len(player.player_inventory) == 1:
-							loot_random_item = None
-							return open_lootbox(player)
-				else:
-					pass
+				def check_for_special_recipe():
+					if len(player.player_inventory) == 0 or len(player.player_inventory) == 1:
+						if loot_random_item[0].unique_id == "rec010":
+							loot_item = loot_random_item[random.randint(0, len(loot_random_item) - 1)]
+							Recipe.unique_id = loot_random_item[0].unique_id
+
+					elif len(player.player_inventory) <= 0 and loot_random_item[0].unique_id != "rec010":
+						pass
+				check_for_special_recipe()
 
 				if lootbox.unique_id == "lb001" or lootbox.unique_id == "lb002" or lootbox.unique_id == "lb004" or lootbox.unique_id == "lb005" or lootbox.unique_id == "lb006" or lootbox.unique_id == "lb008" or lootbox.unique_id == "lb009":
 					add_to_recipe(loot_item)
@@ -529,9 +539,8 @@ def random_lootbox(recipe, player):
 	else:
 		boxluck_eq = None
 
-	add_to_loot(boxluck, boxluck_eq)
 	log_message("add_to_loot called with boxluck_eq", level=logging.INFO)
-	
+	add_to_loot(boxluck, boxluck_eq)
 
 def cooking_input(player):
 	recipe_list = player.player_inventory
@@ -593,11 +602,17 @@ def cooking_input(player):
 def sell_item(player):
 	print("1 - Sell recipes")
 	print("2 - Go back")
+	log_message("Sell recipes initalised", level=logging.INFO)
 	try:
-		log_message("Sell recipes initalised", level=logging.INFO)
 		player_selection = int(input("What would you like to do?: "))
 	except ValueError:
-		print("\033[43mSelection was invalid, please try again!\033[0m")
+		print("Invalid selection, please try again!")
+		log_message("Player caused ValueError in sell_item player_selection", level=logging.INFO)
+		return sell_item(player)
+	except UnboundLocalError:
+		print("Invalid selection, please try again!")
+		log_message("Player caused UnboundLocalError in sell_item player_selection", level=logging.INFO)
+		return sell_item(player)
 
 	if player_selection == 1:
 		if len(player.player_inventory) > 0:
@@ -610,20 +625,27 @@ def sell_item(player):
 			except ValueError:
 				print("\033[43mSelection is invalid, please try again!\033[0m")
 				return sell_item(player)
-			if rec_del_select >= 1:
-				recipe.quantity -= 1
+
+			if 1 <= rec_del_select <= len(player.player_inventory):
+				selected_recipe = player.player_inventory[rec_del_select - 1]
+				selected_recipe.quantity -= 1
+				xpvalue = selected_recipe.exp_value // 5
 				player.experience += xpvalue
 				print("You gained: " + f"\033[32;1m+{xpvalue}\033[0m " + "XP!" )
-				if recipe.quantity <= 0:
-					player.player_inventory.remove(recipe)
-				log_message(f"player sold {recipe} for {xpvalue}", level=logging.INFO)	
-			elif rec_del_select <= 0:
+				if selected_recipe.quantity <= 0:
+					player.player_inventory.remove(selected_recipe)
+				log_message(f"player sold {recipe} for {xpvalue}", level=logging.INFO)
+				return sell_item(player)	
+
+			elif rec_del_select < 0:
 				print("Your selection is invalid, please try again!")
 				return sell_item(player)
+
 		elif len(player.player_inventory) <= 0:
 			print("\033[43mYou have no recipes to choose from!\033[0m")
 			return sell_item(player)
 			log_message("Player returned due to empty inv", level=logging.INFO)
+
 	elif player_selection == 2:
 		return
 		log_message("Player voluntarily exited sell_item", level=logging.INFO)
