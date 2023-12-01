@@ -1,9 +1,9 @@
 # Cooking Chef
 
 ## Minimum Requirements:
-OS: Windows 8 or later / MacOS: 12.2 Monterey or later
+OS: Windows 10 or later / MacOS: 12.2 Monterey or later
 </br>
-Python: Python 3.8 or later 
+Python: Python 3 (version 10) or later 
 </br>
 No other requirements
 </br>
@@ -16,6 +16,17 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 26 / Windows:
+- Fixed: Player could get a special recipe if they had 0 items in their inventory, the code only checked for 1 or more items when it would decide whether to grant a special recipe or not.
+- Fixed: Special recipe ingredients were used when player used an incorrect item on the special recipe.
+- Fixed: Some of the new items could be used on any recipes when they were meant for specific recipes.
+- Fixed: An issue where a player could crash the game when putting in an invalid value in the sell recipes menu.
+- Fixed: Issue where the selling a recipe function would only sell the last printed recipe instead of the player's selection
+- Changed: Special Recipes are enabled
+- Changed: Selling a recipe now keeps you in the Sell Recipes menu instead of bringing you back to the main menu.
+- Changed: Slight text adjustment for options menu.
+- Changed: Application now coded and runs in Python version 12.
+- Changed: Windows 8 is no longer supported as the minimum requirement, although the game can be probably be started on windows 8 or below, future updates will not consider any system behaviours for windows 8 or below.
 ### Build 25.1 / Windows:
 - Fixed: Issue where chefgame.log would give a permission error whenever the logging function would try to write to that file. The exception was previously unhandled so that's why the error popped up.
 - Fixed: Visual colour bug when opening options menu
@@ -49,7 +60,5 @@ If you encounter issues with the game or need technical support, submit these to
 - Fixed: Issue where selling a recipe would give you a decimal number from the xp amount
 - Fixed: Player will no longer be given a special recipe when they have no other recipes in their inventory
 - Special Recipe: Even though you can select an item before cooking a special recipe, it will not use the item if you do not have the correct ingredients cooked to cook that recipe
-### Build 3 / MacOS
-- Updated MacOS version to align with the windows version of the game, the changes are the same so the patch notes for the windows version are inclusive of the MacOS version.
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
