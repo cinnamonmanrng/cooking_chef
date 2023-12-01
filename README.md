@@ -16,6 +16,8 @@ If you encounter issues with the game or need technical support, submit these to
 </br>
 ## Version History:
 <b>Version History only shows the 5 most recent updates, if you wish to see older updates, please refer to the patch_notes.txt file</b>
+### Build 26.1 / Windows:
+- Fixed: Missing lootbox from previous updates now works in this one
 ### Build 26 / Windows:
 - Fixed: Player could get a special recipe if they had 0 items in their inventory, the code only checked for 1 or more items when it would decide whether to grant a special recipe or not.
 - Fixed: Special recipe ingredients were used when player used an incorrect item on the special recipe.
@@ -46,19 +48,5 @@ If you encounter issues with the game or need technical support, submit these to
 - Fixed: Visual bug when trying to delete a save file from an empty slot where the notification colour of the message "Save file slot (2 or 3) is empty" would fill every bit of text with the same colour.
 - Added: Logging system that stores log files in "Logs" folder, creates log entries of specific events and errors that are used for reference in case there is a bug needing a fix.
 - Added: More recipes, items and lootboxes for qualities 0 to 2
-### Build 24 / Windows
-- Changed: player's status will now be printed through the main function opposed to using the level up function, this avoids double printing it after finishing a recipe
-- Changed: recipe progress bar now prints with a different symbol
-- Changed: using an item on a recipe now correctly displays "item" instead of the script term "equipment"
-- Changed: Older recipes, items and lootboxes have now been replaced by new ones
-- Changed: selling a recipe now gives the player 1/5 of the xp amount instead of 1/4
-- Changed: random lootboxes chances for an item lootbox now change based on player level, a player below level 2 has a 50% chance to recieve an item lootbox, from level 2 to level 4 the chance increases to 65%, level 4 to 6 chance is 75%, level 6 to 8 chance is 80% and above level 8 chance is 99%
-- Changed: Levels 1 - 4 now have different xp requirements, level 1 starts at 2000 xp, level 2 at 4500, level 3 at 7000 and level 4 at 12500
-- Added: New recipes, items and lootboxes with a wider variety of recipes and items from different lootboxes
-- Added: Recipes that require one or more other recipes to be cooked beforehand, these recipes will also reward the player with more experience but they will also take more time
-- Added: Option to claim a LootBox™ in the game menu ("main" function) when the player has no more recipes and no lootboxes to open
-- Fixed: Issue where selling a recipe would give you a decimal number from the xp amount
-- Fixed: Player will no longer be given a special recipe when they have no other recipes in their inventory
-- Special Recipe: Even though you can select an item before cooking a special recipe, it will not use the item if you do not have the correct ingredients cooked to cook that recipe
 </br>
 Thank you for reading this and downloading my game, I hope you enjoy it :smiley:
