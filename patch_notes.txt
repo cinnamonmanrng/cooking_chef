@@ -1,3 +1,6 @@
+Build 26.1 / Windows:
+- Fixed: Missing lootbox from previous updates now works in this one
+
 Build 26 / Windows:
 - Fixed: Player could get a special recipe if they had 0 items in their inventory, the code only checked for 1 or more items when it would decide whether to grant a special recipe or not.
 - Fixed: Special recipe ingredients were used when player used an incorrect item on the special recipe.
