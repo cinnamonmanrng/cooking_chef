@@ -184,6 +184,7 @@ LootBox.random_loot_inv2.append(lootbox4)
 LootBox.random_loot_inv2.append(lootbox6)
 # quality 1 
 LootBox.random_loot_inv2.append(lootbox6)
+LootBox.random_loot_inv2.append(lootbox8)
 # quality 2
 LootBox.random_loot_inv3.append(lootbox9)
 
